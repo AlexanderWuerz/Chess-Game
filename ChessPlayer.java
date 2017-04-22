@@ -9,7 +9,6 @@ public class ChessPlayer {
 	
 	public ChessPlayer(fourplayerChessGame c){
 		cg=c;
-		playerName = ""+c.players.size()+1;
 	}
 	
 	boolean owns(ChessPiece c)	{

@@ -2,17 +2,18 @@
 public abstract class ChessPiece {
 
 	String color;
-
+	String pieceType;
+	
 	protected boolean legalMove(fourplayerChessGame fourplayerChessGame, int ix, int iy, int fx, int fy) {
 		if (fx == ix && fy == iy)
 			return false; // cannot move nothing
-		if (fx < 0 || fx > 7 || ix < 0 || ix > 7 || fy < 0 || fy > 7 || iy < 0
-				|| iy > 7)
+		if (fx < 0 || fx > 13 || ix < 0 || ix > 13 || fy < 0 || fy > 13 || iy < 0
+				|| iy > 13)
 			return false; // cannot move off board
 
 		
 		// must still check for occupied space
-
+		
 		return true;
 	}
 
@@ -27,8 +28,13 @@ public abstract class ChessPiece {
 
 		}
 	}
+	
+	public String toString(){
+		return color+pieceType+fourplayerChessGame.RESET;
+	}
 
 	public static class Pawn extends ChessPiece {
+		
 
 		char direction;
 
@@ -39,12 +45,11 @@ public abstract class ChessPiece {
 
 		boolean moved;
 
-		public Pawn(String c, char dir) throws Exception {
+		public Pawn(String c, char dir) {
 			super(c);
-			if (dir != 'u' && dir != 'd' && dir != 'l' && dir != 'r')
-				throw new Exception();
 			direction = dir;
 			moved = false;
+			pieceType = "\u265F";
 		}
 
 		@Override
@@ -94,6 +99,7 @@ public abstract class ChessPiece {
 
 		public Knight(String c) {
 			super(c);
+			pieceType = "\u265E";
 			// TODO Auto-generated constructor stub
 		}
 
@@ -117,6 +123,7 @@ public abstract class ChessPiece {
 
 		public Bishop(String c) {
 			super(c);
+			pieceType = "\u265D";
 			// TODO Auto-generated constructor stub
 		}
 
@@ -132,6 +139,7 @@ public abstract class ChessPiece {
 
 		public Rook(String c) {
 			super(c);
+			pieceType = "\u265C";
 			// TODO Auto-generated constructor stub
 		}
 
@@ -147,6 +155,7 @@ public abstract class ChessPiece {
 
 		public Queen(String c) {
 			super(c);
+			pieceType="\u265B";
 			// TODO Auto-generated constructor stub
 		}
 
@@ -162,6 +171,7 @@ public abstract class ChessPiece {
 
 		public King(String c) {
 			super(c);
+			pieceType = "\u265A";
 			// TODO Auto-generated constructor stub
 		}
 
@@ -181,6 +191,24 @@ public abstract class ChessPiece {
 			// checks if THIS king is in checkmate, not any king
 		}
 
+	}
+	
+	public static class blocked extends ChessPiece{
+
+		public blocked(String c) {
+			super(c);
+			// TODO Auto-generated constructor stub
+		}
+		
+		public String toString(){
+			return "X";
+		}
+		
+		public boolean legalMove(){
+			return false;
+			
+		}
+		
 	}
 
 }
