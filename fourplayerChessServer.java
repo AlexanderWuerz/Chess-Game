@@ -37,7 +37,7 @@ public class fourplayerChessServer {
 //public static String[][] board = new String[8][8];
 //public static ChessGame cg = new ChessGame();
 public static fourplayerChessGame cg = new fourplayerChessGame(); 
-public static String[][] board = cg.board; 
+public static ChessPiece[][] board = cg.board; 
 
 	public static void main(String[] args) throws IOException {
 		
