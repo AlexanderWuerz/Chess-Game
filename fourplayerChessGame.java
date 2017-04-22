@@ -35,9 +35,7 @@ import java.io.*;
 import java.util.regex.*;
 import java.util.*;
 
-
-
-class fourplayerChessGame {
+class fourplayerChessGame implements FPGame {
 	private static final int WAITING = 0;
 	private static final int SENTBOARD = 1;
 	public static int state = WAITING;
@@ -45,7 +43,7 @@ class fourplayerChessGame {
 	public static final int BTURN = 3;
 	public static final int RTURN = 4;
 	public static final int LTURN = 5;
-	
+
 	public static final String RED = "\u001B[31m";
 	public static final String GREEN = "\u001B[32m";
 	public static final String YELLOW = "\u001B[33m";
@@ -53,7 +51,7 @@ class fourplayerChessGame {
 	public static final String PURPLE = "\u001B[35m";
 	public static final String CYAN = "\u001B[36m";
 	public static final String RESET = "\u001B[0m";
-	
+
 	ArrayList<ChessPiece> myPieces = new ArrayList<ChessPiece>();
 	public ChessPiece[][] board = new ChessPiece[14][14]; // 14 x 14
 	// public static String[][] board = ChessServer.board;
@@ -61,61 +59,60 @@ class fourplayerChessGame {
 
 	int playerNum;
 
-	public fourplayerChessGame(int pNum){
-	 playerNum = pNum;
-	  // set the pawns
-   for(int i=3; i<11; i++) {
-    SetPiece(i,1,new ChessPiece.Pawn(BLUE, 'u')); 
-    SetPiece(i,12,new ChessPiece.Pawn(RED, 'd')); 
-   } // and other pieces			//Must be altered for 4 player ruleset
-   SetPiece(3,0,new ChessPiece.Rook(BLUE));			//Rooks
-   SetPiece(10,0,new ChessPiece.Rook(BLUE)); 		
-   SetPiece(3,13,new ChessPiece.Rook(RED));			
-   SetPiece(10,13,new ChessPiece.Rook(RED)); 
-   SetPiece(0,3,new ChessPiece.Rook(PURPLE));			//Rooks
-   SetPiece(0,10,new ChessPiece.Rook(PURPLE)); 		
-   SetPiece(13,3,new ChessPiece.Rook(CYAN));			
-   SetPiece(13,10,new ChessPiece.Rook(CYAN)); 
-   SetPiece(4,0,new ChessPiece.Knight(BLUE));			//knights
-   SetPiece(9,0,new ChessPiece.Knight(BLUE)); 
-   SetPiece(4,13,new ChessPiece.Knight(RED));
-   SetPiece(9,13,new ChessPiece.Knight(RED)); 
-   SetPiece(0,4,new ChessPiece.Knight(PURPLE));			//knights
-   SetPiece(0,9,new ChessPiece.Knight(PURPLE)); 
-   SetPiece(13,4,new ChessPiece.Knight(CYAN));
-   SetPiece(13,9,new ChessPiece.Knight(CYAN)); 
-   SetPiece(5,0,new ChessPiece.Bishop(BLUE));			//bishops
-   SetPiece(8,0,new ChessPiece.Bishop(BLUE)); 
-   SetPiece(5,13,new ChessPiece.Bishop(RED));
-   SetPiece(8,13,new ChessPiece.Bishop(RED)); 
-   SetPiece(0,5,new ChessPiece.Bishop(PURPLE));			//bishops
-   SetPiece(0,8,new ChessPiece.Bishop(PURPLE)); 
-   SetPiece(13,5,new ChessPiece.Bishop(CYAN));
-   SetPiece(13,8,new ChessPiece.Bishop(CYAN)); 
-   SetPiece(6,0,new ChessPiece.Queen(BLUE)); 			//queen
-   SetPiece(7,0,new ChessPiece.King(BLUE));			//king	
-   SetPiece(6,13,new ChessPiece.Queen(RED)); 		//queen
-   SetPiece(7,13,new ChessPiece.King(RED)); 		//king  
-   SetPiece(0,6,new ChessPiece.Queen(PURPLE)); 			//queen
-   SetPiece(0,7,new ChessPiece.King(PURPLE));			//king	
-   SetPiece(13,6,new ChessPiece.Queen(CYAN)); 		//queen
-   SetPiece(13,7,new ChessPiece.King(CYAN)); 		//king  
-   
-	for(int i=3; i<11; i++) {
-		SetPiece(1,i,new ChessPiece.Pawn(PURPLE, 'r')); 
-		SetPiece(12,i,new ChessPiece.Pawn(CYAN, 'l')); 
-   }
-	
-	for(int i=0;i<3;i++)
-		for(int j=0;j<3;j++){
-			SetPiece(i,j,new ChessPiece.blocked(RESET));
-			SetPiece(i,13-j,new ChessPiece.blocked(RESET));
-			SetPiece(13-i,13-j,new ChessPiece.blocked(RESET));
-			SetPiece(13-i,j,new ChessPiece.blocked(RESET));
+	public fourplayerChessGame(int pNum) {
+		playerNum = pNum;
+		// set the pawns
+		for (int i = 3; i < 11; i++) {
+			SetPiece(i, 1, new ChessPiece.Pawn(BLUE, 'u'));
+			SetPiece(i, 12, new ChessPiece.Pawn(RED, 'd'));
+		} // and other pieces //Must be altered for 4 player ruleset
+		SetPiece(3, 0, new ChessPiece.Rook(BLUE)); // Rooks
+		SetPiece(10, 0, new ChessPiece.Rook(BLUE));
+		SetPiece(3, 13, new ChessPiece.Rook(RED));
+		SetPiece(10, 13, new ChessPiece.Rook(RED));
+		SetPiece(0, 3, new ChessPiece.Rook(PURPLE)); // Rooks
+		SetPiece(0, 10, new ChessPiece.Rook(PURPLE));
+		SetPiece(13, 3, new ChessPiece.Rook(CYAN));
+		SetPiece(13, 10, new ChessPiece.Rook(CYAN));
+		SetPiece(4, 0, new ChessPiece.Knight(BLUE)); // knights
+		SetPiece(9, 0, new ChessPiece.Knight(BLUE));
+		SetPiece(4, 13, new ChessPiece.Knight(RED));
+		SetPiece(9, 13, new ChessPiece.Knight(RED));
+		SetPiece(0, 4, new ChessPiece.Knight(PURPLE)); // knights
+		SetPiece(0, 9, new ChessPiece.Knight(PURPLE));
+		SetPiece(13, 4, new ChessPiece.Knight(CYAN));
+		SetPiece(13, 9, new ChessPiece.Knight(CYAN));
+		SetPiece(5, 0, new ChessPiece.Bishop(BLUE)); // bishops
+		SetPiece(8, 0, new ChessPiece.Bishop(BLUE));
+		SetPiece(5, 13, new ChessPiece.Bishop(RED));
+		SetPiece(8, 13, new ChessPiece.Bishop(RED));
+		SetPiece(0, 5, new ChessPiece.Bishop(PURPLE)); // bishops
+		SetPiece(0, 8, new ChessPiece.Bishop(PURPLE));
+		SetPiece(13, 5, new ChessPiece.Bishop(CYAN));
+		SetPiece(13, 8, new ChessPiece.Bishop(CYAN));
+		SetPiece(6, 0, new ChessPiece.Queen(BLUE)); // queen
+		SetPiece(7, 0, new ChessPiece.King(BLUE)); // king
+		SetPiece(6, 13, new ChessPiece.Queen(RED)); // queen
+		SetPiece(7, 13, new ChessPiece.King(RED)); // king
+		SetPiece(0, 6, new ChessPiece.Queen(PURPLE)); // queen
+		SetPiece(0, 7, new ChessPiece.King(PURPLE)); // king
+		SetPiece(13, 6, new ChessPiece.Queen(CYAN)); // queen
+		SetPiece(13, 7, new ChessPiece.King(CYAN)); // king
+
+		for (int i = 3; i < 11; i++) {
+			SetPiece(1, i, new ChessPiece.Pawn(PURPLE, 'r'));
+			SetPiece(12, i, new ChessPiece.Pawn(CYAN, 'l'));
 		}
 
-	 
- }
+		for (int i = 0; i < 3; i++)
+			for (int j = 0; j < 3; j++) {
+				SetPiece(i, j, new ChessPiece.blocked(RESET));
+				SetPiece(i, 13 - j, new ChessPiece.blocked(RESET));
+				SetPiece(13 - i, 13 - j, new ChessPiece.blocked(RESET));
+				SetPiece(13 - i, j, new ChessPiece.blocked(RESET));
+			}
+
+	}
 
 	public void SetPiece(int x, int y, ChessPiece r) {
 		board[x][y] = r;
@@ -129,55 +126,6 @@ class fourplayerChessGame {
 	public void RemovePiece(int x, int y) {
 		board[x][y] = null;
 	}
-
-	public void SetTestBoard() {
-		// //SetPiece(1,0,"n");
-		//// SetPiece(2,0,"r");
-		// SetPiece(3,1,"k");
-		// // SetPiece(1,1,"q");
-		// SetPiece(1,5,"R");
-		// setBoard();
-	}
-
-	public void SetInitBoard() {
-
-		// // set the pawns
-		// for(int i=3; i<11; i++) {
-		// SetPiece(i,1,"\u265F");
-		// SetPiece(i,12,"\u2659");
-		// } // and other pieces //Must be altered for 4 player ruleset
-		// SetPiece(3,0,"\u265C");
-		// SetPiece(10,0,"\u265C");
-		// SetPiece(3,13,"\u2656");
-		// SetPiece(10,13,"\u2656");
-		// SetPiece(4,0,"\u265E");
-		// SetPiece(9,0,"\u265E");
-		// SetPiece(4,13,"\u2658");
-		// SetPiece(9,13,"\u2658");
-		// SetPiece(5,0,"\u265D");
-		// SetPiece(8,0,"\u265D");
-		// SetPiece(5,13,"\u2657");
-		// SetPiece(8,13,"\u2657");
-		// SetPiece(6,0,"\u265B");
-		// SetPiece(7,0,"\u265A");
-		// SetPiece(6,13,"\u2655");
-		// SetPiece(7,13,"\u2654");
-		//
-		// for(int i=3; i<11; i++) {
-		// SetPiece(1,i,"\u265F");
-		// SetPiece(12,i,"\u2659");
-		// }
-		//
-		// for(int row = 0; row < board.length; row++) {
-		// for(int col = 0; col < board[row].length; col++) {
-		// if(board[col][row] == null) {
-		// SetPiece(col,row," ");
-		// }
-		// }
-		// }
-		// //setBoard();
-		// System.out.println("");
-	} // end setInitBoard()
 
 	public void setBoard() {
 		System.out.println("   0   1   2   3   4   5   6   7   \t");
@@ -219,7 +167,7 @@ class fourplayerChessGame {
 		String[] values;
 
 		if (state == WAITING) {
-			SetInitBoard();
+
 			theOutput = toString();
 			// SetInitBoard();
 			state = SENTBOARD;
@@ -446,6 +394,51 @@ class fourplayerChessGame {
 			return true;
 		else
 			return false;
+	}
+
+	Scanner sc = new Scanner(System.in);
+
+	@Override
+	public String getMove() {
+
+		int startX, startY, xmove, ymove;
+		ChessPiece pname;
+		String input; // piece name
+		String[] values;
+		System.out.println("Your Turn! ");
+
+		while (true) {
+			System.out.println("Which Piece do you want to move?");
+			input = sc.nextLine(); // get the entire line.
+			values = input.split(" "); // split on spaces.
+			startX = Integer.parseInt(values[0]);
+			startY = Integer.parseInt(values[1]);
+			ChessPiece p = getPiece(startX, startY);
+
+			System.out.println("Where would you like to move? (x y)");
+			// pname = in.nextLine();
+			input = sc.nextLine();
+			values = input.split(" ");
+			xmove = Integer.parseInt(values[0]);
+			ymove = Integer.parseInt(values[1]);
+
+			// validate that the move is legal.
+			if (myPieces.contains(p) && IsValidMove(startX, startY, xmove, ymove, p)) {
+				RemovePiece(startX, startY);
+				SetPiece(xmove, ymove, p);
+				turn = true;
+				// setBoard();
+			} else {
+				System.out.println("Invalid move, try again!");
+			}
+			// TODO Auto-generated method stub
+		}
+	}
+
+	@Override
+	public void sendMove(String s) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

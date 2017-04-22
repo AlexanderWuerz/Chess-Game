@@ -25,4 +25,10 @@ public class ChessPlayer {
 	public void updateBoard(){
 		
 	}
+	
+	public static void main(String[] args){
+		System.out.println("working");
+		fourplayerChessGame cg = new fourplayerChessGame(1);
+		cg.setBoard();
+	}
 }

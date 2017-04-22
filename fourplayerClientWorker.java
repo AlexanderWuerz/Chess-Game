@@ -32,7 +32,7 @@ public class fourplayerClientWorker implements Runnable {
 
 		//while(true) {
 			try {
-		 		String inputLine, outputLine;
+		 		String inputLine, outputLine="";
 		            // Initiate conversation with client
 		            //TicTacToeProtocol ttp = new TicTacToeProtocol();
 		            //outputLine = cp.processInput(null);
@@ -40,9 +40,9 @@ public class fourplayerClientWorker implements Runnable {
 		            out.println(outputLine);  */
 					
 					
-		            while ((inputLine = cp.getMove()) != null) {
+		            while ((inputLine = cp.getMove()) != "bye") {
 		               // outputLine = cp.processInput(inputLine);
-						outputLine = cp.sendMove(inputLine); 
+						cp.sendMove(inputLine); 
 		                out.println(outputLine);
 		                if (outputLine.equals("Bye."))
 		                    break; 
