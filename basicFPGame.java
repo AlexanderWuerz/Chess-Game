@@ -2,6 +2,11 @@ import java.util.Scanner;
 
 public class basicFPGame implements FPGame {
 
+	int playerNum=0;
+	
+	public basicFPGame(int pn){
+		playerNum = pn;
+	}
 	
 	int score=0;
 	@Override
