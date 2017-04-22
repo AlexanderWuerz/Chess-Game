@@ -36,8 +36,9 @@ public class fourplayerChessServer {
 	
 //public static String[][] board = new String[8][8];
 //public static ChessGame cg = new ChessGame();
-public static fourplayerChessGame cg = new fourplayerChessGame(); 
-public static ChessPiece[][] board = cg.board; 
+//public static fourplayerChessGame cg = new fourplayerChessGame(); 
+
+//public static ChessPiece[][] board = cg.board; 
 
 	public static void main(String[] args) throws IOException {
 		
@@ -57,25 +58,25 @@ public static ChessPiece[][] board = cg.board;
 					            System.out.println(e.getMessage());
 				} 
 				
-				ClientWorker w1; 
-							ClientWorker w2;
-							ClientWorker w3; 
-														ClientWorker w4; 
+							fourplayerClientWorker w1; 
+							fourplayerClientWorker w2;
+							fourplayerClientWorker w3; 
+							fourplayerClientWorker w4; 
 							try {
 								// server.accept() returns a client connection
-								w1 = new ClientWorker(serverSocket.accept(),cg); 
-								w2 = new ClientWorker(serverSocket.accept(),cg); 
-								w3 = new ClientWorker(serverSocket.accept(),cg); 
-								w4 = new ClientWorker(serverSocket.accept(),cg); 
+								w1 = new fourplayerClientWorker(serverSocket.accept()); 
+								w2 = new fourplayerClientWorker(serverSocket.accept()); 
+								w3 = new fourplayerClientWorker(serverSocket.accept()); 
+								w4 = new fourplayerClientWorker(serverSocket.accept()); 
 								Thread t1 = new Thread(w1); 
 								Thread t2 = new Thread(w2);
 								Thread t3 = new Thread(w3); 
-																Thread t4 = new Thread(w4); 
+								Thread t4 = new Thread(w4); 
 								
 								t1.start(); 
 								t2.start();
 								t3.start(); 
-																t4.start(); 
+								t4.start(); 
 							} catch (IOException e) {
 								System.out.println("Accept failed"); 
 								System.exit(-1); 

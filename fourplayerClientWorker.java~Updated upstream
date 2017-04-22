@@ -12,7 +12,7 @@ public class fourplayerClientWorker implements Runnable {
 	private ChessGame cp;
 
 	
-	public ClientWorker(Socket client, ChessGame cp) {
+	public fourplayerClientWorker(Socket client, ChessGame cp) {
 		this.client = client;  
 		this.cp = cp;
 	}

@@ -33,7 +33,8 @@ import java.io.*;
 import java.net.*;
 
 class ChessClient {
-	public static ChessGame cg = new ChessGame(); 
+	//public static ChessGame cg = new ChessGame(); 
+	public static basicFPGame cg;
 
 	 
 		public static void main(String[] args) throws IOException {
@@ -63,12 +64,13 @@ class ChessClient {
 		                if (fromServer.equals("Bye."))
 		                    break;
 		                System.out.println("Enter the squares you want to move from and to, respectively.  Separate input by spaces < x y x y >");
-		                fromUser = stdIn.readLine();
+		                //fromUser = stdIn.readLine();
+						fromUser = cg.getMove(); 
+						
 		                if (fromUser != null) {
 		                    System.out.println("Client: " + fromUser);
 		                    out.println(fromUser);
 		                }
-				//cg.setBoard(); 
 		            }
 		        } catch (UnknownHostException e) {
 		            System.err.println("Don't know about host " + hostName);

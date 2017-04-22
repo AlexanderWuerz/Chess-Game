@@ -9,12 +9,12 @@ import java.lang.*;
 
 public class fourplayerClientWorker implements Runnable {
 	private Socket client; 
-	private ChessGame cp;
+	//private fourplayerChessGame cp;
+	private basicFPGame cp; 
 
 	
-	public fourplayerClientWorker(Socket client, ChessGame cp) {
+	public fourplayerClientWorker(Socket client) {
 		this.client = client;  
-		this.cp = cp;
 	}
 	
 	public void run() {
@@ -25,7 +25,7 @@ public class fourplayerClientWorker implements Runnable {
 			in = new BufferedReader(new InputStreamReader(client.getInputStream())); 
 			out = new PrintWriter(client.getOutputStream(), true); 
 		} catch (IOException e) {
-			System.out.println("failed connection"); 
+			System.out.println("failed connection1"); 
 			System.exit(-1); 
 		}
 		
@@ -35,12 +35,14 @@ public class fourplayerClientWorker implements Runnable {
 		 		String inputLine, outputLine;
 		            // Initiate conversation with client
 		            //TicTacToeProtocol ttp = new TicTacToeProtocol();
-		            outputLine = cp.processInput(null);
-		            out.println(outputLine);  
+		            //outputLine = cp.processInput(null);
+				/*	outputLine = cp.getMove(); 
+		            out.println(outputLine);  */
 					
 					
-		            while ((inputLine = in.readLine()) != null) {
-		                outputLine = cp.processInput(inputLine);
+		            while ((inputLine = cp.getMove()) != null) {
+		               // outputLine = cp.processInput(inputLine);
+						outputLine = cp.sendMove(inputLine); 
 		                out.println(outputLine);
 		                if (outputLine.equals("Bye."))
 		                    break; 
