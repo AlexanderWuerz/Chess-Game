@@ -51,8 +51,8 @@ class fourplayerChessGame {
 	public static final String CYAN = "\u001B[36m";
 	public static final String RESET = "\u001B[0m";
 
-	
-  public static String[][] board = new String[14][14]; // 14 x 14
+  ArrayList<ChessPlayer> players = new ArrayList<ChessPlayer>();
+  public ChessPiece[][] board = new ChessPiece[14][14]; // 14 x 14
 //public static String[][] board = ChessServer.board;
  public static boolean turn = false; // Fire Before Smoke, WHITE goes first. 
 /* public static void main(String[] args) {
@@ -61,66 +61,65 @@ class fourplayerChessGame {
 //SetOpeningBoard(); 
  } */
  
- public static void SetPiece(int x, int y, String r){
+ public void SetPiece(int x, int y, ChessPiece r){
   board[x][y] = r;
  }
- public static String getPiece(int x, int y) {
-  String pie; 
-  pie = board[x][y]; // Get piece name; 
-  return pie; 
- }
- public static void RemovePiece(int x, int y) {
-  board[x][y] = " "; 
- }
- public static void SetTestBoard() {
-  //SetPiece(1,0,"n");
-//  SetPiece(2,0,"r");
-  SetPiece(3,1,"k"); 
- // SetPiece(1,1,"q"); 
-  SetPiece(1,5,"R"); 
-  setBoard(); 
- }
- public static void SetInitBoard() {
+ public ChessPiece getPiece(int x, int y) {
   
-  // set the pawns
-   for(int i=3; i<11; i++) {
-    SetPiece(i,1,"\u265F"); 
-    SetPiece(i,12,"\u2659"); 
-   } // and other pieces
-   SetPiece(3,0,"\u265C");
-   SetPiece(10,0,"\u265C"); 
-   SetPiece(3,13,"\u2656");
-   SetPiece(10,13,"\u2656"); 
-   SetPiece(4,0,"\u265E");
-   SetPiece(9,0,"\u265E"); 
-   SetPiece(4,13,"\u2658");
-   SetPiece(9,13,"\u2658"); 
-   SetPiece(5,0,"\u265D");
-   SetPiece(8,0,"\u265D"); 
-   SetPiece(5,13,"\u2657");
-   SetPiece(8,13,"\u2657"); 
-   SetPiece(6,0,"\u265B"); 
-   SetPiece(7,0,"\u265A"); 
-   SetPiece(6,13,"\u2655"); 
-   SetPiece(7,13,"\u2654"); 
-   
-	for(int i=3; i<11; i++) {
-    SetPiece(1,i,"\u265F"); 
-    SetPiece(12,i,"\u2659"); 
-   }
-
-	for(int row = 0; row < board.length; row++) {
-		for(int col = 0; col < board[row].length; col++) {
-			if(board[col][row] == null) {
-				SetPiece(col,row," "); 
-			}
-		}
-	}
-   //setBoard(); 
+  return board[x][y]; 
+ }
+ public void RemovePiece(int x, int y) {
+    board[x][y] = null; 
+ }
+ public void SetTestBoard() {
+//  //SetPiece(1,0,"n");
+////  SetPiece(2,0,"r");
+//  SetPiece(3,1,"k"); 
+// // SetPiece(1,1,"q"); 
+//  SetPiece(1,5,"R"); 
+//  setBoard(); 
+ }
+ public void SetInitBoard() {
+  
+//  // set the pawns
+//   for(int i=3; i<11; i++) {
+//    SetPiece(i,1,"\u265F"); 
+//    SetPiece(i,12,"\u2659"); 
+//   } // and other pieces			//Must be altered for 4 player ruleset
+//   SetPiece(3,0,"\u265C");
+//   SetPiece(10,0,"\u265C"); 
+//   SetPiece(3,13,"\u2656");
+//   SetPiece(10,13,"\u2656"); 
+//   SetPiece(4,0,"\u265E");
+//   SetPiece(9,0,"\u265E"); 
+//   SetPiece(4,13,"\u2658");
+//   SetPiece(9,13,"\u2658"); 
+//   SetPiece(5,0,"\u265D");
+//   SetPiece(8,0,"\u265D"); 
+//   SetPiece(5,13,"\u2657");
+//   SetPiece(8,13,"\u2657"); 
+//   SetPiece(6,0,"\u265B"); 
+//   SetPiece(7,0,"\u265A"); 
+//   SetPiece(6,13,"\u2655"); 
+//   SetPiece(7,13,"\u2654"); 
+//   
+//	for(int i=3; i<11; i++) {
+//    SetPiece(1,i,"\u265F"); 
+//    SetPiece(12,i,"\u2659"); 
+//   }
+//
+//	for(int row = 0; row < board.length; row++) {
+//		for(int col = 0; col < board[row].length; col++) {
+//			if(board[col][row] == null) {
+//				SetPiece(col,row," "); 
+//			}
+//		}
+//	}
+//   //setBoard(); 
            // System.out.println(""); 
  } // end setInitBoard()
 
- public static void setBoard() {
+ public void setBoard() {
              System.out.println("   0   1   2   3   4   5   6   7   \t"); 
    for (int row = 0; row < board.length; row++)
             {
@@ -147,327 +146,9 @@ class fourplayerChessGame {
 
  } // end setBoard() 
 
- public static boolean IsValidMove(int ix, int iy, int fx, int fy, String type) {
-	int k = 0; 
-  boolean eval = false; 
- /* if(!IsMyPiece(ix,iy))
-   return false;  */
-	if(fx == ix && fy == iy)
-		return false; //cannot move nothing
-	if(fx < 0 || fx > 13 || ix < 0 || ix > 13 || fy < 0 || fy > 13 || iy <0 || iy > 13)	   return false; // cannot move outside the board
- switch(type) {
-    case "\u265F": // black pawn
-     if(fx==ix && fy==iy+1) {
-      eval = true; // is valid move for pawn
-	}
-	else if (iy==1) {
-		if(fx==ix&&fy==iy+2)
-		eval = true; 		
-	}
-     else if(((fx==ix+1)||(fx==ix-1)) && fy==iy+1){
-      if(!IsMyPiece(fx,fy)) {
-       if(!IsEmptySquare(fx,fy)) {       
-			eval = true;         
-			Capture(fx,fy); // capture piece 
-       }
-      } else 
-       eval = false; 
-//     }
-}     break;
-    case "\u265B": // black king
-     if((fx==ix||fx==ix+1||fx==ix-1) && (fy==iy||fy==iy+1||fy==iy-1)) {
-
-      if(!IsMyPiece(fx,fy)) {
-	      eval = true; 
-		/*if(!IsEmptySquare(fx,fy))
-       		Capture(fx,fy); */
-}
-     }
-     break; 
-    case "\u265A": // black queen (diagonal moves done)
-	     	 k = 0; 
-	/*if(iy==fy && ix==fx) 
-		return false; // attempt to move to same position
-	   if(fx < 0 || fx > 13 || ix < 0 || ix > 13 || fy < 0 || fy > 13 || iy <0 || iy > 13)
-	    return false; */
-
-	if (iy == fy) { // horizontal move 
-		if(ix<fx) { // move right
-			for(k=ix+1; k<=fx; ++k)
-				if(getPiece(k,iy) != null && !IsMyPiece(k,iy)){
-					Capture(k,iy); 
-					return true; 
-				}		
-				else if(getPiece(k,iy) != null)
-					return false; 
-		} else if (ix>fx){ // move left
-			for(k=ix-1; k>=fx; --k)
-				if(!IsEmptySquare(k,iy) && !IsMyPiece(k,iy)) {
-					Capture(k,iy); 
-					return true; 
-				}
-				else if(getPiece(k,iy) != null) 
-					return false; 
-		}
-	} else if (ix == fx) { // vertical move
-		// Vertical move
-		        if (iy < fy) {
-		            // Move down
-		            for (k = iy + 1; k <= fy; ++k)
-						if (!IsEmptySquare(ix,k) && !IsMyPiece(ix,k)) {
-							Capture(ix,k); 
-							return true; 
-						}
-		                else if (getPiece(ix,k) != null)
-		                    return false;
-		        } else if (iy > fy){
-		            // Move up
-		            for (k = iy - 1; k >= fy; --k)
-						if(!IsEmptySquare(ix,k) && !IsMyPiece(ix,k)) {
-							Capture(ix,k); 
-							return true; 
-						}
-		                else if (getPiece(ix,k) != null)
-		                    return false;
-		        }
-		else return false; 
-	} /*else // not a valid rook move
-		return false; */
-
-			else if((Math.abs(fx-ix) == Math.abs(fy-iy))) {
-				eval = true; 
-			}
-		      break;
-
-    case "\u265C": // black rook
-	 k = 0; 
-	/*if(iy==fy && ix==fx) 
-		return false; // attempt to move to same position
-    if(fx < 0 || fx > 13 || ix < 0 || ix > 13 || fy < 0 || fy > 13 || iy <0 || iy > 13)
-	    return false; */
-
-	if (iy == fy) { // horizontal move 
-		if(ix<fx) { // move right
-			for(k=ix+1; k<=fx; ++k)
-				if(getPiece(k,iy) != null && !IsMyPiece(k,iy)){
-					Capture(k,iy); 
-					return true; 
-				}		
-				else if(getPiece(k,iy) != null)
-					return false; 
-		} else if (ix>fx){ // move left
-			for(k=ix-1; k>=fx; --k)
-				if(!IsEmptySquare(k,iy) && !IsMyPiece(k,iy)) {
-					Capture(k,iy); 
-					return true; 
-				}
-				else if(getPiece(k,iy) != null) 
-					return false; 
-		}
-	} else if (ix == fx) { // vertical move
-		// Vertical move
-		        if (iy < fy) {
-		            // Move down
-		            for (k = iy + 1; k <= fy; ++k)
-						if (!IsEmptySquare(ix,k) && !IsMyPiece(ix,k)) {
-							Capture(ix,k); 
-							return true; 
-						}
-		                else if (getPiece(ix,k) != null)
-		                    return false;
-		        } else if (iy > fy){
-		            // Move up
-		            for (k = iy - 1; k >= fy; --k)
-						if(!IsEmptySquare(ix,k) && !IsMyPiece(ix,k)) {
-							Capture(ix,k); 
-							return true; 
-						}
-		                else if (getPiece(ix,k) != null)
-		                    return false;
-		        } 
-	} else // not a valid rook move
-		return false; 
-	break; 
-    case "\u265D": //black bishop
- /*	if(iy==fy && ix==fx)
-    	return false; //cannot move nothing
-    if(fx < 0 || fx > 13 || ix < 0 || ix > 13 || fy < 0 || fy > 13 || iy <0 || iy > 13)
-        return false;  */
-	if(Math.abs(ix-fx) == Math.abs(iy-fy)) {
-		return true; 
-	}
-	case "\u265E": // black knight
-	if ((((fx==ix-2)||(fx==ix+2)) && ((fy==iy-1)||(fy==iy+1))) ||
-	      (((fx==ix-1)||(fx==ix+1)) && ((fy==iy-2)||(fy==iy+2)))) {
-	      if(!IsEmptySquare(fx,fy)) {
-	       if (!IsMyPiece(fx,fy)) {
-	        eval = true; 
-	        Capture(fx,fy); 
-	       } else 
-	        eval = false; 
-	       } else // is empty square but no piece is captured. 
-	        eval = true; 
-	       } else // not valid move
-	        eval = false; 
-	    break; 
-     
-    case "\u2659": // white pawn
-
-     if(fx==ix && fy==iy-1) {
-      eval = true; // is valid move for pawn
-}
-	else if (iy==12) {
-		if(fx==ix&&fy==iy-2)
-		eval = true; 		
-	}
-     else if(((fx==ix+1)||(fx==ix-1)) && fy==iy-1){
-      if(!IsMyPiece(fx,fy)) {
-       if(!IsEmptySquare(fx,fy)) {       
-			eval = true;         
-			Capture(fx,fy); // capture piece 
-       }
-      } else 
-       eval = false; 
-     }
-
-     break;
-    case "\u2655": // white king
-     if((fx==ix||fx==ix+1||fx==ix-1) && (fy==iy||fy==iy+1||fy==iy-1)) {
-      eval = true; 
-      if(!IsMyPiece(fx,fy))
-       Capture(fx,fy); 
-     }
-     break; 
-    case "\u2654": // white queen 
-     	 k = 0; 
-/*if(iy==fy && ix==fx) 
-	return false; // attempt to move to same position
-   if(fx < 0 || fx > 13 || ix < 0 || ix > 13 || fy < 0 || fy > 13 || iy <0 || iy > 13)
-    return false; */
-
-if (iy == fy) { // horizontal move 
-	if(ix<fx) { // move right
-		for(k=ix+1; k<=fx; ++k)
-			if(getPiece(k,iy) != null && !IsMyPiece(k,iy)){
-				Capture(k,iy); 
-				return true; 
-			}		
-			else if(getPiece(k,iy) != null)
-				return false; 
-	} else if (ix>fx){ // move left
-		for(k=ix-1; k>=fx; --k)
-			if(!IsEmptySquare(k,iy) && !IsMyPiece(k,iy)) {
-				Capture(k,iy); 
-				return true; 
-			}
-			else if(getPiece(k,iy) != null) 
-				return false; 
-	}
-} else if (ix == fx) { // vertical move
-	// Vertical move
-	        if (iy < fy) {
-	            // Move down
-	            for (k = iy + 1; k <= fy; ++k)
-					if (!IsEmptySquare(ix,k) && !IsMyPiece(ix,k)) {
-						Capture(ix,k); 
-						return true; 
-					}
-	                else if (getPiece(ix,k) != null)
-	                    return false;
-	        } else if (iy > fy){
-	            // Move up
-	            for (k = iy - 1; k >= fy; --k)
-					if(!IsEmptySquare(ix,k) && !IsMyPiece(ix,k)) {
-						Capture(ix,k); 
-						return true; 
-					}
-	                else if (getPiece(ix,k) != null)
-	                    return false;
-	        }
-	else return false; 
-} 
-
-		else if((Math.abs(fx-ix) == Math.abs(fy-iy))) {
-			eval = true; 
-		}
-	      break;
-
-    case "\u2656": // white rook
-	 k = 0; 
-	/*if(iy==fy && ix==fx) 
-		return false; // attempt to move to same position
-	   if(fx < 0 || fx > 13 || ix < 0 || ix > 13 || fy < 0 || fy > 13 || iy <0 || iy > 13)
-	    return false; */
-
-	if (iy == fy) { // horizontal move 
-		if(ix<fx) { // move right
-			for(k=ix+1; k<=fx; ++k)
-				if(getPiece(k,iy) != null && !IsMyPiece(k,iy)){
-					Capture(k,iy); 
-					return true; 
-				}		
-				else if(getPiece(k,iy) != null)
-					return false; 
-		} else if (ix>fx){ // move left
-			for(k=ix-1; k>=fx; --k)
-				if(!IsEmptySquare(k,iy) && !IsMyPiece(k,iy)) {
-					Capture(k,iy); 
-					return true; 
-				}
-				else if(getPiece(k,iy) != null) 
-					return false; 
-		}
-	} else if (ix == fx) { // vertical move
-		// Vertical move
-		        if (iy < fy) {
-		            // Move down
-		            for (k = iy + 1; k <= fy; ++k)
-						if (!IsEmptySquare(ix,k) && !IsMyPiece(ix,k)) {
-							Capture(ix,k); 
-							return true; 
-						}
-		                else if (getPiece(ix,k) != null)
-		                    return false;
-		        } else if (iy > fy){
-		            // Move up
-		            for (k = iy - 1; k >= fy; --k)
-						if(!IsEmptySquare(ix,k) && !IsMyPiece(ix,k)) {
-							Capture(ix,k); 
-							return true; 
-						}
-		                else if (getPiece(ix,k) != null)
-		                    return false;
-		        } 
-	} else // not a valid rook move
-		return false; 
-	break; 
-    case "\u2657":  // white bishop
-/*	if(fx == ix && fy == iy)
-	    	return false; //cannot move nothing
-	    if(fx < 0 || fx > 13 || ix < 0 || ix > 13 || fy < 0 || fy > 13 || iy <0 || iy > 13)
-	        return false; */
-		if((Math.abs(fx-ix) == Math.abs(fy-iy))) {
-			eval = true; 
-		}
-	      break;
-    case "\u2658": // white night
-     if ((((fx==ix-2)||(fx==ix+2)) && ((fy==iy-1)||(fy==iy+1))) ||
-      (((fx==ix-1)||(fx==ix+1)) && ((fy==iy-2)||(fy==iy+2)))) {
-      if(!IsEmptySquare(fx,fy)) {
-       if (!IsMyPiece(fx,fy)) {
-        eval = true; 
-        Capture(fx,fy); 
-       } else 
-        eval = false; 
-       } else // is empty square but no piece is captured. 
-        eval = true; 
-       } else // not valid move
-        eval = false; 
-    break; 
-
-   } 
-   return eval; 
-
+ public boolean IsValidMove(int ix, int iy, int fx, int fy, ChessPiece pname) {
+	 
+	 return pname.legalMove(this, ix, iy, fx, fy);
 } // end IsValidMove()
 
 
@@ -475,7 +156,8 @@ if (iy == fy) { // horizontal move
 	String theOutput = null; 
 	  Scanner in = new Scanner(System.in); 
 	  int startX,startY,xmove,ymove; 
-	  String pname = " ", input; // piece name
+	  String input; // piece name
+	  ChessPiece pname;
 	String[] values; 
 
 	if (state == WAITING) {
@@ -600,11 +282,12 @@ public String toString() {
 		return b; 
 
 }
- public static void MoveIntake() {
+ public void MoveIntake() {
   
   Scanner in = new Scanner(System.in); 
   int startX,startY,xmove,ymove; 
-  String pname = " ", input; // piece name
+  ChessPiece pname;
+String input; // piece name
   String[] values; 
   while(turn) {
    System.out.println("Smoke, select piece to move (x y): "); 
@@ -625,8 +308,8 @@ public String toString() {
 	//if(generateValidMoves(startX,startY,pname) != null) {
 		
       RemovePiece(startX,startY);
-     SetPiece(xmove,ymove,pname); 
-     turn = false; 
+      SetPiece(xmove,ymove,pname); 
+      turn = false; 
     setBoard(); 
     }
     else {
@@ -668,40 +351,34 @@ public String toString() {
   
  } // end MoveIntake() 
  
- public static void Capture(int x, int y) {
-	if(getPiece(x,y) == "\u265B" && state == WTURN)
-		System.out.println("Game Over!"); 
-	else if(getPiece(x,y) == "\u2655" && state == BTURN)
-		System.out.println("Game Over!"); 
-  RemovePiece(x,y); 
-	EndGame(); 
- }
- public static boolean IsEmptySquare(int x, int y) {
+
+ public boolean IsEmptySquare(int x, int y) {
  // String square = board[x][y]; 
   if (board[x][y] == null)
    return true; 
   else return false; 
  }
- public static Boolean IsMyPiece(int x, int y) {
-  String piece = getPiece(x,y);
+ public Boolean IsMyPiece(int x, int y) {		//no longer needed
+  ChessPiece piece = getPiece(x,y);
  
-  if(state == WTURN) {
-	if(piece=="\u2654"||piece=="\u2655"||piece=="\u2656"||piece=="\u2657"||
-		piece=="\u2658"||piece=="\u2659")
-  		return true; 
-	else 
-		return false; 
-	}
-  else if(state == BTURN) {
-	if(piece=="\u265A"||piece=="\u265B"||piece=="\u265C"||piece=="\u265D"||
-		piece=="\u265E"||piece=="\u265F")
-   		return true;
-	else 
-		return false; 
-	} 
-	return false; 
+//  if(state == WTURN) {
+//	if(piece=="\u2654"||piece=="\u2655"||piece=="\u2656"||piece=="\u2657"||
+//		piece=="\u2658"||piece=="\u2659")
+//  		return true; 
+//	else 
+//		return false; 
+//	}
+//  else if(state == BTURN) {
+//	if(piece=="\u265A"||piece=="\u265B"||piece=="\u265C"||piece=="\u265D"||
+//		piece=="\u265E"||piece=="\u265F")
+//   		return true;
+//	else 
+//		return false; 
+//	} 
+//	return false; 
+  	return false;
  }
-public static boolean isCapture(Move move) {
+public boolean isCapture(Move move) {
 	int x = move.getX(); 
 	int y = move.getY(); 
 	if(!IsEmptySquare(x,y))
@@ -710,7 +387,6 @@ public static boolean isCapture(Move move) {
 		return false; 
 }
 
-public static void EndGame() {}
 
  
 }
