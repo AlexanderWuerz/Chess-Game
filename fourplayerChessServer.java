@@ -29,35 +29,73 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */ 
 
-import java.net.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
 
-public class fourplayerChessServer { 
+public class fourplayerChessServer implements Runnable{ 
 	
 //public static String[][] board = new String[8][8];
 //public static ChessGame cg = new ChessGame();
 //public static fourplayerChessGame cg = new fourplayerChessGame(); 
 
 //public static ChessPiece[][] board = cg.board; 
+private basicFPGame cp; 
+	
 
-	public static void main(String[] args) throws IOException {
-		
-		if (args.length != 1) {
-		            System.err.println("Usage: java ChessServer <port number>");
-		            System.exit(1);
-		        }
-
-		        int portNumber = Integer.parseInt(args[0]);
-				ServerSocket serverSocket = null;
+		        int portNumber;
+		public fourplayerChessServer(int port) {
+			portNumber = port; 
+		}
 				
-				try {
-					serverSocket = new ServerSocket(portNumber); 
+				
+	public void run() {
+				try (ServerSocket serverSocket = new ServerSocket(portNumber);
+					Socket socket1 = serverSocket.accept(); 
+					PrintWriter out1 = new PrintWriter(socket1.getOutputStream(),true); 
+					BufferedReader in1 = new BufferedReader(new InputStreamReader
+						(socket1.getInputStream())); 
+					Socket socket2 = serverSocket.accept(); 
+					PrintWriter out2 = new PrintWriter(socket2.getOutputStream(),true); 
+					BufferedReader in2 = new BufferedReader(new InputStreamReader
+						(socket2.getInputStream()));
+					Socket socket3 = serverSocket.accept(); 
+					PrintWriter out3 = new PrintWriter(socket3.getOutputStream(),true); 
+					BufferedReader in3 = new BufferedReader(new InputStreamReader
+						(socket3.getInputStream())); 
+					Socket socket4 = serverSocket.accept(); 
+					PrintWriter out4 = new PrintWriter(socket4.getOutputStream(),true); 
+					BufferedReader in4 = new BufferedReader(new InputStreamReader
+						(socket4.getInputStream()));
+				 ){
+					String res1,res2,res3,res4;
+					
+					//do {
+						res1 = in1.readLine(); 
+					//} while (true); 
+					//do {
+						res2 = in2.readLine(); 
+					//} while (true); 
+					//do {
+						res3 = in3.readLine(); 
+					//} while (true);
+					//do {
+						res4 = in4.readLine(); 
+					//} while (true); 
+
+					
+					
 				} catch (IOException e) {
 					System.out.println("Exception caught when trying to listen on port "
 					                + portNumber + " or listening for a connection");
 					            System.out.println(e.getMessage());
 				} 
+	}
 				
+				/*
 							fourplayerClientWorker w1; 
 							fourplayerClientWorker w2;
 							fourplayerClientWorker w3; 
@@ -77,14 +115,13 @@ public class fourplayerChessServer {
 								t2.start();
 								t3.start(); 
 								t4.start(); 
-							} catch (IOException e) {
-								System.out.println("Accept failed"); 
-								System.exit(-1); 
-							}
-
-//	ChessGame cg = new ChessGame(); 
- 	//SetTestBoard();  
- 	//cg.SetInitBoard(); 
-	//SetOpeningBoard(); 
+								*/
+	public static void main(String[] args) throws IOException {
+										
+		if (args.length != 1) {
+           	System.err.println("Usage: java ChessServer <port number>");
+			System.exit(1);
+		}
+		(new Thread(new fourplayerChessServer(Integer.parseInt(args[0])))).start();
  	}
 }
