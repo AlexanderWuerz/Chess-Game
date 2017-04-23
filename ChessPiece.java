@@ -123,7 +123,7 @@ public abstract class ChessPiece {
 		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
 		if (!super.legalMove(cg, ix, iy, fx, fy))
 			return false;
-		if ((Math.abs(ix - fx) == Math.abs(iy - fy))&&!(cg.myPieces.contains(cg.getPiece(fx,fy)))) 
+		if ((Math.abs(ix - fx) == Math.abs(iy - fy))&&!(cg.isMyPiece(fx,fy))) 
 			return true;
 		return false;
 		}
