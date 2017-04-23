@@ -21,7 +21,13 @@ public abstract class ChessPiece {
 		color = c;
 	}
 
-	
+	public void move(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
+		if (legalMove(cg, ix, iy, fx, fy)) {
+
+			// edit position in cg
+
+		}
+	}
 	
 	public String toString(){
 		return color+pieceType+fourplayerChessGame.RESET;
@@ -56,7 +62,10 @@ public abstract class ChessPiece {
 				return false;
 			
 			
-			
+			if (((fx == ix + 1) || (fx == ix - 1)) && fy == iy + 1) {
+				if (!(cg.isMyPiece(fx, fy)) && !(cg.isEmptySquare))
+					return true; 
+			}
 			if(moved){
 				switch (direction) {
 				case up:
@@ -84,7 +93,10 @@ public abstract class ChessPiece {
 			
 		}
 
-		
+		public void move(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
+			moved = true;
+			super.move(cg, ix, iy, fx, fy);
+		}
 	}
 
 	public static class Knight extends ChessPiece {
@@ -162,7 +174,7 @@ public abstract class ChessPiece {
 		if (!super.legalMove(cg, ix, iy, fx, fy))
 			return false;
 			
-		if ((Math.abs(fx - ix) == Math.abs(fy - iy))&&!(cg.isMyPiece(fx,fy)))  // diagonal move 
+		if ((Math.abs(ix - fx) == Math.abs(iy - fy))&&!(cg.isMyPiece(fx,fy)))  // diagonal move 
 			return true; 
 		if (iy == fy) { // horizontal move
 			if (ix < fx) { // move right
@@ -189,7 +201,7 @@ public abstract class ChessPiece {
 				}
 			}
 		}
-		return false; 
+			return false; 
 		}
 
 	}
