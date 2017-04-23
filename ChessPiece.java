@@ -1,6 +1,3 @@
-import java.util.Arrays;
-
-import javafx.util.Pair;
 
 public abstract class ChessPiece {
 
@@ -8,11 +5,15 @@ public abstract class ChessPiece {
 	String pieceType;
 	
 	protected boolean legalMove(fourplayerChessGame fourplayerChessGame, int ix, int iy, int fx, int fy) {
-		if (fx == ix && fy == iy)
+		if (fx == ix && fy == iy) {
+			System.out.println("Invalid move, you must move a piece.");
 			return false; // cannot move nothing
+		}
 		if (fx < 0 || fx > 13 || ix < 0 || ix > 13 || fy < 0 || fy > 13 || iy < 0
-				|| iy > 13)
+				|| iy > 13) {
+					System.out.println("Invalid move, you cannot move off the board.");
 			return false; // cannot move off board
+				}
 
 		
 		// must still check for occupied space
@@ -22,17 +23,6 @@ public abstract class ChessPiece {
 
 	public ChessPiece(String c) {
 		color = c;
-	}
-	
-	public Pair<Integer, Integer> loc(fourplayerChessGame cg){		//locates THIS piece on the board
-		ChessPiece[][] board = cg.board;
-		for (int i = 0; i < board.length; i++) {
-			for (int j = 0; j < board.length; j++) {
-				if(board[i][j]==this)
-					return new Pair(i,j);
-			}
-		}
-		return null;	//if THIS is not on the board
 	}
 
 	public void move(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
@@ -145,7 +135,7 @@ public abstract class ChessPiece {
 			
 			
 			if(!(((fx == ix - 2) || (fx == ix + 2)) && ((fy == iy - 1) || (fy == iy + 1)))
-					|| (((fx == ix - 1) || (fx == ix + 1)) && ((fy == iy - 2) || (fy == iy + 2))))
+					&& !(((fx == ix - 1) || (fx == ix + 1)) && ((fy == iy - 2) || (fy == iy + 2))))
 				return false;
 			
 			return true;
@@ -167,6 +157,8 @@ public abstract class ChessPiece {
 			return false;
 		if ((Math.abs(ix - fx) == Math.abs(iy - fy))&&!(cg.isMyPiece(fx,fy))) 
 			return true;
+			
+		System.out.println("Invalid move, you must move diagonally.");
 		return false;
 		}
 
@@ -263,33 +255,13 @@ public abstract class ChessPiece {
 
 		public boolean inCheck(fourplayerChessGame cg) {
 			
-			Pair<Integer, Integer> kingCoords = loc(cg);
-
-			ChessPiece[][] board = cg.board;
-			for(int i=0; i<14; i++){
-				for(int j=0; j<14; j++){
-					if(!cg.isMyPiece(i, j) && board[i][j].legalMove(cg, i, j, kingCoords.getKey(), kingCoords.getValue()))
-						return true;
-				}
-			}
-			
 			return false;
 			// tests if THIS king is in check
 		}
 
 		public boolean isCheckMate(fourplayerChessGame cg) {
-			
-			Pair<Integer, Integer> kingCoords = loc(cg);
-			int kx = kingCoords.getKey(),ky = kingCoords.getValue();
-			
-			for(int i=-1; i<1;i++)
-				for(int j = -1; j<1; j++)
-					if(!(j==0&&i==0)){
-						if(legalMove(cg, kx, ky, kx+i, ky+j))
-							return false;
-					}
-			
-			return true;
+			return false;
+			// checks if THIS king is in checkmate, not any king
 		}
 
 	}
