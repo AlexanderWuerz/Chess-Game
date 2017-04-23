@@ -63,7 +63,7 @@ public abstract class ChessPiece {
 			
 			
 			if (((fx == ix + 1) || (fx == ix - 1)) && fy == iy + 1) {
-				if (!(cg.isMyPiece(fx, fy)) && !(cg.isEmptySquare))
+				if (!(cg.isMyPiece(fx, fy)) && !(cg.IsEmptySquare(fx,fy)))
 					return true; 
 			}
 			if(moved){
@@ -216,11 +216,20 @@ public abstract class ChessPiece {
 
 		@Override
 		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
-			// will take direction into account
-			return false;
+			if(!super.legalMove(cg, ix, iy, fx, fy))
+				return false;
+			
+			if(Math.abs(ix-fx)>1||Math.abs(iy-fy)>1)
+				return false;
+			
+			if(inCheck(cg, ix, iy, fx, fy))
+				return false;
+			
+			return true;
 		}
 
-		public boolean inCheck(fourplayerChessGame cg) {
+		public boolean inCheck(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
+			
 			return false;
 			// tests if THIS king is in check
 		}

@@ -52,6 +52,7 @@ class fourplayerChessGame implements FPGame {
 	public static final String CYAN = "\u001B[36m";
 	public static final String RESET = "\u001B[0m";
 
+	ArrayList<ChessPiece> allPieces = new ArrayList<ChessPiece>();
 	ArrayList<ChessPiece> myPieces = new ArrayList<ChessPiece>();
 	public ChessPiece[][] board = new ChessPiece[14][14]; // 14 x 14
 	// public static String[][] board = ChessServer.board;
@@ -141,6 +142,11 @@ class fourplayerChessGame implements FPGame {
 				myPieces.add(getPiece(13, i));
 			}
 		}
+		
+		for(ChessPiece[] r:board)
+			for(ChessPiece p:r)
+				if(p!=null && !(p instanceof ChessPiece.blocked))
+					allPieces.add(p);
 
 	}
 
