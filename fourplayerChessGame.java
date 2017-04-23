@@ -150,6 +150,7 @@ class fourplayerChessGame implements FPGame {
 		System.out.println("   0   1   2   3   4   5   6   7   \t");
 
 		// MoveIntake();
+		//getMove(); 
 
 	} // end setBoard()
 
@@ -366,25 +367,12 @@ class fourplayerChessGame implements FPGame {
 			return false;
 	}
 
-	public Boolean IsMyPiece(int x, int y) { // no longer needed
+	public Boolean isMyPiece(int x, int y) { // no longer needed
 		ChessPiece piece = getPiece(x, y);
 
-		// if(state == WTURN) {
-		// if(piece=="\u2654"||piece=="\u2655"||piece=="\u2656"||piece=="\u2657"||
-		// piece=="\u2658"||piece=="\u2659")
-		// return true;
-		// else
-		// return false;
-		// }
-		// else if(state == BTURN) {
-		// if(piece=="\u265A"||piece=="\u265B"||piece=="\u265C"||piece=="\u265D"||
-		// piece=="\u265E"||piece=="\u265F")
-		// return true;
-		// else
-		// return false;
-		// }
-		// return false;
-		return false;
+		if (myPieces.contains(piece))
+			return true; 
+		return false; 
 	}
 
 	public boolean isCapture(Move move) {
@@ -427,7 +415,7 @@ class fourplayerChessGame implements FPGame {
 				RemovePiece(startX, startY);
 				SetPiece(xmove, ymove, p);
 				turn = true;
-				// setBoard();
+				 setBoard();
 			} else {
 				System.out.println("Invalid move, try again!");
 			}

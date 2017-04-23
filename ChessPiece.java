@@ -32,6 +32,7 @@ public abstract class ChessPiece {
 	public String toString(){
 		return color+pieceType+fourplayerChessGame.RESET;
 	}
+	
 
 	public static class Pawn extends ChessPiece {
 		
@@ -120,7 +121,7 @@ public abstract class ChessPiece {
 	}
 
 	public static class Bishop extends ChessPiece {
-
+		int k; 
 		public Bishop(String c) {
 			super(c);
 			pieceType = "\u265D";
@@ -129,13 +130,16 @@ public abstract class ChessPiece {
 
 		@Override
 		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
-
+		if (!super.legalMove(cg, ix, iy, fx, fy))
 			return false;
+		if ((Math.abs(ix - fx) == Math.abs(iy - fy))&&!(cg.isMyPiece(fx,fy))) 
+			return true;
+		return false;
 		}
 
 	}
 
-	public static class Rook extends ChessPiece {
+	public static class Rook extends Queen {
 
 		public Rook(String c) {
 			super(c);
@@ -146,13 +150,15 @@ public abstract class ChessPiece {
 		@Override
 		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
 			// will take direction into account
-			return false;
+			if ((Math.abs(fx - ix) == Math.abs(fy - iy)))  // diagonal move 
+				return false;
+			return true;
 		}
 
 	}
 
 	public static class Queen extends ChessPiece {
-
+		int k = 0; 
 		public Queen(String c) {
 			super(c);
 			pieceType="\u265B";
@@ -162,7 +168,37 @@ public abstract class ChessPiece {
 		@Override
 		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
 			// will take direction into account
+		if (!super.legalMove(cg, ix, iy, fx, fy))
 			return false;
+			
+		if ((Math.abs(fx - ix) == Math.abs(fy - iy))&&!(cg.isMyPiece(fx,fy)))  // diagonal move 
+			return true; 
+		if (iy == fy) { // horizontal move
+			if (ix < fx) { // move right
+				for (k = ix + 1; k <= fx; ++k) {
+					if (cg.getPiece(k,iy) != null && !(cg.isMyPiece(k,iy)))
+						return true; 
+				}
+			} else if (ix > fx) { // move left
+				for (k = ix - 1; k >= fx; --k) {
+					if (cg.getPiece(k,iy) != null && !(cg.isMyPiece(k,iy)))
+						return true; 
+				}
+			}
+		} else if (ix == fx) { // vertical move
+			if (iy < fy) { // move down
+				for (k = iy + 1; k <= fy; ++k) {
+					if (cg.getPiece(ix,k) != null && !(cg.isMyPiece(ix,k)))
+						return true; 
+				}
+			} else if (iy > fy) { // move up 
+				for (k = iy - 1; k >= fy; --k) {
+					if (cg.getPiece(ix,k) != null && !(cg.isMyPiece(ix,k)))
+						return true; 
+				}
+			}
+		}
+		return false; 
 		}
 
 	}

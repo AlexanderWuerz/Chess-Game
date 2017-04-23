@@ -30,5 +30,10 @@ public class ChessPlayer {
 		System.out.println("working");
 		fourplayerChessGame cg = new fourplayerChessGame(1);
 		cg.setBoard();
+		while (true) {
+			String move = cg.getMove(); 
+		cg.sendMove(move); 
+		cg.setBoard();
+		}
 	}
 }
