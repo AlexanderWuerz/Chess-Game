@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 1995, 2013, Oracle and/or its affiliates. All rights reserved.
  *
@@ -27,61 +28,66 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */ 
+ */
 
 import java.io.*;
 import java.net.*;
+import java.util.Scanner;
 
-class ChessClient {
-	public static FPGame cg;// = new basicFPGame(); 
+class ChessClient implements Runnable {
+	public static FPGame cg;// = new basicFPGame();
+	private String hostName;
+	private int portNumber;
 
-	 
-		public static void main(String[] args) throws IOException {
-		        
-		        if (args.length != 2) {
-		            System.err.println(
-		                "Usage: java ChessClient <host name> <port number>");
-		            System.exit(1);
-		        }
+	public ChessClient(String host, int port) {
+		hostName = host;
+		portNumber = port;
+	}
 
-		        String hostName = args[0];
-		        int portNumber = Integer.parseInt(args[1]);
+	@Override
+	public void run() {
+		try (Socket tttSocket = new Socket(hostName, portNumber);
+				PrintWriter out = new PrintWriter(tttSocket.getOutputStream(), true);
+				BufferedReader in = new BufferedReader(new InputStreamReader(tttSocket.getInputStream()));) {
+			Scanner sc = new Scanner(System.in);
+			String move;
+			int playerNum = Integer.parseInt(in.readLine());
+			cg = new basicFPGame(playerNum);
+			
+			while (!cg.isOver()) {
+				for (int i = 0; i < 4; i++) {
+					if (i == playerNum) {
+						
+						System.out.println(playerNum+" getting move.");
+						move = cg.getMove();
+						out.println(move);
+						System.out.println(playerNum+" sent move.");
+					} else {
+						move = in.readLine();
+						System.out.println(playerNum+" got move.");
+					}
+					cg.sendMove(move);
+					
+				}
+			}
+			System.out.println("game over!");
+		} catch (UnknownHostException e) {
+			System.err.println("Don't know about host " + hostName);
+			System.exit(1);
+		} catch (IOException e) {
+			System.err.println("Couldn't get I/O for the connection to " + hostName);
+			System.exit(1);
+		}
+	}
 
-		        try (
-		            Socket cSocket = new Socket(hostName, portNumber);
-		            PrintWriter out = new PrintWriter(cSocket.getOutputStream(), true);
-		            BufferedReader in = new BufferedReader(
-		                new InputStreamReader(cSocket.getInputStream()));
-		        ) {
-		            BufferedReader stdIn =
-		                new BufferedReader(new InputStreamReader(System.in));
-		            String fromServer;
-		            String fromUser;
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		if (args.length != 2) {
+			System.err.println("Usage: java ChessClient <host name> <port number>");
+			System.exit(1);
+		}
 
-		            while ((fromServer = in.readLine()) != null) {
-		                System.out.println("Server: " + fromServer.replace("\t","\n"));
-		                if (fromServer.equals("Bye."))
-		                    break;
-		                System.out.println("Enter the squares you want to move from and to, respectively.  Separate input by spaces < x y x y >");
-		                fromUser = cg.getMove();
-		                out.println(fromUser);
-		                cg.sendMove(in.readLine());
-		                
-		                if (fromUser != null) {
-		                    System.out.println("Client: " + fromUser);
-		                    out.println(fromUser);
-		                }
-				//cg.setBoard(); 
-		            }
-		        } catch (UnknownHostException e) {
-		            System.err.println("Don't know about host " + hostName);
-		            System.exit(1);
-		        } catch (IOException e) {
-		            System.err.println("Couldn't get I/O for the connection to " +
-		                hostName);
-		            System.exit(1);
-		        }
-		    }
+		(new Thread(new ChessClient(args[0], Integer.parseInt(args[1])))).start();
+	}
 
-	
 }

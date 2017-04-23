@@ -28,7 +28,17 @@ public class ChessPlayer {
 	
 	public static void main(String[] args){
 		System.out.println("working");
-		fourplayerChessGame cg = new fourplayerChessGame(1);
+		
+		(new Thread(new fourplayerChessServer(4455))).start();
+		
+		for(int i=0; i<4;i++){
+			(new Thread(new ChessClient("localhost",4455))).start();
+			Thread.sleep(100);
+		}
+		
+		
+		
+//		a.start();
 		cg.setBoard();
 		while (true) {
 			String move = cg.getMove(); 
