@@ -81,6 +81,21 @@ public abstract class ChessPiece {
 //					return true; 
 //			}
 			
+			switch (direction) {
+				case up: 
+					if (!(cg.isMyPiece(fx, fy)) && !(cg.IsEmptySquare(fx,fy)))
+						return (fy == iy+1 && ((fx==ix-1)||(fx==ix+1))); 
+				case down: 
+					if (!(cg.isMyPiece(fx, fy)) && !(cg.IsEmptySquare(fx,fy)))
+						return (fy == iy-1 && ((fx==ix-1)||(fx==ix+1))); 
+				case left: 
+					if (!(cg.isMyPiece(fx, fy)) && !(cg.IsEmptySquare(fx,fy)))
+						return (fx == ix-1 && ((fy==iy-1)||(fy==iy+1)));
+				if (!(cg.isMyPiece(fx, fy)) && !(cg.IsEmptySquare(fx,fy)))
+					return (fx == ix+1 && ((fy==iy-1)||(fy==iy+1)));
+
+			}
+
 			if(moved){
 				switch (direction) {
 				case up:
@@ -189,8 +204,8 @@ public abstract class ChessPiece {
 		if (!super.legalMove(cg, ix, iy, fx, fy))
 			return false;
 			
-		if ((Math.abs(ix - fx) == Math.abs(iy - fy))&&!(cg.isMyPiece(fx,fy)))  // diagonal move 
-			return true; 
+		/*if ((Math.abs(ix - fx) == Math.abs(iy - fy))&&!(cg.isMyPiece(fx,fy)))  // diagonal move 
+			return true; */
 		if (iy == fy) { // horizontal move
 			if (ix < fx) { // move right
 				for (k = ix + 1; k <= fx; ++k) {
