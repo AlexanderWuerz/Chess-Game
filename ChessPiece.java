@@ -4,9 +4,8 @@ public abstract class ChessPiece {
 	String color;
 	String pieceType;
 	
-	protected boolean legalMove(fourplayerChessGame fourplayerChessGame, int ix, int iy, int fx, int fy) {
-		if (fx == ix && fy == iy) {
-			System.out.println("Invalid move, you must move a piece.");
+	protected boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
+		if (fx == ix && fy == iy)
 			return false; // cannot move nothing
 		}
 		if (fx < 0 || fx > 13 || ix < 0 || ix > 13 || fy < 0 || fy > 13 || iy < 0
@@ -15,11 +14,20 @@ public abstract class ChessPiece {
 			return false; // cannot move off board
 				}
 
+		fourplayerChessGame copy = new fourplayerChessGame(cg);
+		copy.sendMove(ix+" "+iy+" "+fx+" "+fy);
+		
+		King myKing = cg.myKing;
+		if(myKing.inCheck(copy))
+			return false; //cannot move into check
+		
+		
 		
 		// must still check for occupied space
 		
 		return true;
 	}
+
 
 	public ChessPiece(String c) {
 		color = c;
@@ -242,12 +250,6 @@ public abstract class ChessPiece {
 				return false;
 			
 			if(Math.abs(ix-fx)>1||Math.abs(iy-fy)>1)
-				return false;
-			
-			fourplayerChessGame copy = new fourplayerChessGame(cg);
-			copy.sendMove(ix+" "+iy+" "+fx+" "+fy);
-			
-			if(inCheck(copy))
 				return false;
 			
 			return true;

@@ -58,7 +58,9 @@ class fourplayerChessGame implements FPGame {
 	// public static String[][] board = ChessServer.board;
 	//public static boolean turn = false; // Fire Before Smoke, WHITE goes first.
 	public boolean isOver = false;
-
+	public boolean iLose = false;
+	public ChessPiece.King myKing;
+	
 	int playerNum;
 	String mycolor;
 	
@@ -70,6 +72,10 @@ class fourplayerChessGame implements FPGame {
 				board[i][j] = orig.board[i][j];
 			}
 		}
+		playerNum = orig.playerNum;
+		mycolor = orig.mycolor;
+		
+		myKing = orig.myKing;
 				
 	}
 	public fourplayerChessGame(int pNum) {
@@ -153,6 +159,8 @@ class fourplayerChessGame implements FPGame {
 			}
 		}
 		
+		
+		
 		for(ChessPiece[] r:board)
 			for(ChessPiece p:r)
 				if(p!=null && !(p instanceof ChessPiece.blocked))
@@ -205,78 +213,6 @@ class fourplayerChessGame implements FPGame {
 		return pname.legalMove(this, ix, iy, fx, fy);
 	} // end IsValidMove()
 
-	public String processInput(String theInput) {
-		String theOutput = null;
-		Scanner in = new Scanner(System.in);
-		int startX, startY, xmove, ymove;
-		String input; // piece name
-		ChessPiece pname;
-		String[] values;
-
-		if (state == WAITING) {
-
-			theOutput = toString();
-			// SetInitBoard();
-			state = SENTBOARD;
-		} else if (state == SENTBOARD || state == WTURN) {
-
-			// input = in.nextLine(); // get the entire line.
-			values = theInput.split(" "); // split on spaces.
-			startX = Integer.parseInt(values[0]);
-			startY = Integer.parseInt(values[1]);
-			xmove = Integer.parseInt(values[2]);
-			ymove = Integer.parseInt(values[3]);
-			// pname = values[2];
-			pname = getPiece(startX, startY);
-
-			// pname = in.nextLine();
-
-			// validate that the move is legal.
-			if (IsValidMove(startX, startY, xmove, ymove, pname)) {
-				RemovePiece(startX, startY);
-				SetPiece(xmove, ymove, pname);
-				// turn = true;
-				state = BTURN; // switch to black turn
-				setBoard();
-				theOutput = toString();
-				// setBoard();
-			} else {
-				// setBoard();
-				theOutput = "Invalid move, try again!";
-			}
-
-		} else if (state == BTURN) {
-
-			// input = in.nextLine(); // get the entire line.
-			values = theInput.split(" "); // split on spaces.
-			startX = Integer.parseInt(values[0]);
-			startY = Integer.parseInt(values[1]);
-			xmove = Integer.parseInt(values[2]);
-			ymove = Integer.parseInt(values[3]);
-			// pname = values[2];
-			pname = getPiece(startX, startY);
-
-			// pname = in.nextLine();
-
-			// validate that the move is legal.
-			if (IsValidMove(startX, startY, xmove, ymove, pname)) {
-				RemovePiece(startX, startY);
-				SetPiece(xmove, ymove, pname);
-				// turn = true;
-				state = WTURN; // switch to black turn
-				setBoard();
-				theOutput = toString();
-			} else {
-				// setBoard();
-				theOutput = "Invalid move, try again!";
-			}
-
-		}
-
-		return theOutput;
-	}
-
-
 	public boolean IsEmptySquare(int x, int y) {
 		// String square = board[x][y];
 		if (board[x][y] == null)
@@ -306,6 +242,14 @@ class fourplayerChessGame implements FPGame {
 	@Override
 	public String getMove() {
 
+		if(iLose)
+			return "out";
+		
+		if(myKing.inCheck(this)&&myKing.isCheckMate(this))
+		{
+			iLose = true;
+		}
+		
 		int startX, startY, xmove, ymove;
 		ChessPiece pname;
 		String input; // piece name
@@ -345,6 +289,8 @@ class fourplayerChessGame implements FPGame {
 
 	@Override
 	public void sendMove(String s) {
+		if(s.equals("out"))
+			return;
 		String input = s;// get the entire line.
 		String[] values = input.split(" "); // split on spaces.
 		int startX = Integer.parseInt(values[0]);
