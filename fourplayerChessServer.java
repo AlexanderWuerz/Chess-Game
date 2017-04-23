@@ -54,7 +54,7 @@ public class fourplayerChessServer implements Runnable {
 
 	public void run() {
 		
-		FPGame cg = new basicFPGame(0);
+		FPGame cg = new fourplayerChessGame(0);
 		try  {
 			ServerSocket serverSocket = new ServerSocket(portNumber);
 			fpClientInterface[] cis = new fpClientInterface[4];

@@ -59,8 +59,11 @@ class fourplayerChessGame implements FPGame {
 	public boolean isOver = false;
 
 	int playerNum;
-
+	String mycolor;
+	
 	public fourplayerChessGame(int pNum) {
+		
+		mycolor = pNum==0?"blue":pNum==1?"red":pNum==2?"purple":"cyan";
 		playerNum = pNum;
 		// set the pawns
 		for (int i = 3; i < 11; i++) {
@@ -116,25 +119,23 @@ class fourplayerChessGame implements FPGame {
 
 		switch (playerNum) {
 		case 0:
-			break;
-		case 1:
 			for (int i = 3; i < 11; i++) {
 				myPieces.add(getPiece(i, 1));
 				myPieces.add(getPiece(i, 0));
 			}
 			break;
-		case 2:
+		case 1:
 			for (int i = 3; i < 11; i++) {
 				myPieces.add(getPiece(i, 12));
 				myPieces.add(getPiece(i, 13));
 			}
 			break;
-		case 3:
+		case 2:
 			for (int i = 3; i < 11; i++) {
 				myPieces.add(getPiece(0, i));
 				myPieces.add(getPiece(1, i));
 			}
-		case 4:
+		case 3:
 			for (int i = 3; i < 11; i++) {
 				myPieces.add(getPiece(12, i));
 				myPieces.add(getPiece(13, i));
@@ -414,8 +415,8 @@ class fourplayerChessGame implements FPGame {
 		ChessPiece pname;
 		String input; // piece name
 		String[] values;
-		System.out.println("Your Turn! ");
-
+		System.out.println(mycolor+", Your Turn! ");
+		setBoard();
 		while (true) {
 			System.out.println("Which Piece do you want to move?");
 			input = sc.nextLine(); // get the entire line.
@@ -449,7 +450,7 @@ class fourplayerChessGame implements FPGame {
 
 	@Override
 	public void sendMove(String s) {
-		String input = sc.nextLine(); // get the entire line.
+		String input = s;// get the entire line.
 		String[] values = input.split(" "); // split on spaces.
 		int startX = Integer.parseInt(values[0]);
 		int startY = Integer.parseInt(values[1]);
@@ -458,6 +459,7 @@ class fourplayerChessGame implements FPGame {
 		
 		
 		ChessPiece p = getPiece(startX, startY);
+		RemovePiece(startX, startY);
 		SetPiece(xmove, ymove, p);
 		// RemovePiece(startX, startY);
 		// SetPiece(xmove, ymove, p);

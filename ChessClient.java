@@ -52,7 +52,7 @@ class ChessClient implements Runnable {
 			Scanner sc = new Scanner(System.in);
 			String move;
 			int playerNum = Integer.parseInt(in.readLine());
-			cg = new basicFPGame(playerNum);
+			cg = new fourplayerChessGame(playerNum);
 
 			while (!cg.isOver()) {
 				for (int i = 0; i < 4; i++) {

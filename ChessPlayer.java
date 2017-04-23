@@ -38,7 +38,7 @@ public class ChessPlayer {
 		
 		
 		
-//		a.start();
+
 		
 	}
 }
