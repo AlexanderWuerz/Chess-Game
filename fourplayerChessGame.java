@@ -388,7 +388,7 @@ class fourplayerChessGame implements FPGame {
 
 	} // end MoveIntake()
 
-	public boolean IsEmptySquare(int x, int y) {
+	public boolean isEmptySquare(int x, int y) {
 		// String square = board[x][y];
 		if (board[x][y] == null)
 			return true;
@@ -396,12 +396,17 @@ class fourplayerChessGame implements FPGame {
 			return false;
 	}
 
-
+	public boolean isMyPiece(int x, int y) {
+		ChessPiece piece = getPiece(x,y); 
+		if (myPieces.contains(piece)) 
+			return true; 
+		return false; 			
+	}
 
 	public boolean isCapture(Move move) {
 		int x = move.getX();
 		int y = move.getY();
-		if (!IsEmptySquare(x, y))
+		if (!isEmptySquare(x, y))
 			return true;
 		else
 			return false;
