@@ -73,20 +73,17 @@ public class fourplayerChessServer implements Runnable {
 					String move = cis[i].in.readLine();
 					System.out.println("got move from player "+i);
 					cg.sendMove(move);
-					
+					Thread.sleep(100);
 					
 					for(int j=0;j<4;j++){
 						System.out.println("sending move to player "+j);
-						cis[j].out.print(move);
+						cis[j].out.println(move);
+						Thread.sleep(100);
 					}
 				}
 			}
 			System.out.println("game over");
 			
-			
-
-
-
 		} catch (IOException e) {
 			System.out.println(
 					"Exception caught when trying to listen on port " + portNumber + " or listening for a connection");

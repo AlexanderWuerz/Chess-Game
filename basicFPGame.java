@@ -2,16 +2,20 @@ import java.util.Scanner;
 
 public class basicFPGame implements FPGame {
 
-	int playerNum=0;
+	int playerNum;
+	int score;
 	
 	public basicFPGame(int pn){
 		System.out.println("Player "+pn+" created");
 		playerNum = pn;
+		score=0;
 	}
 	
-	int score=0;
+	
 	@Override
 	public String getMove() {
+		if(isOver())
+			return "0";
 		System.out.println(playerNum+" your turn");
 		return (new Scanner(System.in)).nextLine();
 	}

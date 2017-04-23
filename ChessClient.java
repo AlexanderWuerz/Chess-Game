@@ -35,7 +35,7 @@ import java.net.*;
 import java.util.Scanner;
 
 class ChessClient implements Runnable {
-	public static FPGame cg;// = new basicFPGame();
+	public FPGame cg;// = new basicFPGame();
 	private String hostName;
 	private int portNumber;
 
@@ -53,21 +53,21 @@ class ChessClient implements Runnable {
 			String move;
 			int playerNum = Integer.parseInt(in.readLine());
 			cg = new basicFPGame(playerNum);
-			
+
 			while (!cg.isOver()) {
 				for (int i = 0; i < 4; i++) {
 					if (i == playerNum) {
-						
-						System.out.println(playerNum+" getting move.");
+
+						System.out.println(playerNum + " getting move.");
 						move = cg.getMove();
 						out.println(move);
-						System.out.println(playerNum+" sent move.");
-					} else {
-						move = in.readLine();
-						System.out.println(playerNum+" got move.");
+						System.out.println(playerNum + " sent move.");
 					}
+					System.out.println(playerNum + " waiting on server");
+					move = in.readLine();
 					cg.sendMove(move);
-					
+					System.out.println(playerNum + " got move.");
+
 				}
 			}
 			System.out.println("game over!");

@@ -26,7 +26,7 @@ public class ChessPlayer {
 		
 	}
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws InterruptedException{
 		System.out.println("working");
 		
 		(new Thread(new fourplayerChessServer(4455))).start();
@@ -39,11 +39,6 @@ public class ChessPlayer {
 		
 		
 //		a.start();
-		cg.setBoard();
-		while (true) {
-			String move = cg.getMove(); 
-		cg.sendMove(move); 
-		cg.setBoard();
-		}
+		
 	}
 }
