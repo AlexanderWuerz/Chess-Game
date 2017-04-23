@@ -105,12 +105,12 @@ class fourplayerChessGame implements FPGame {
 		SetPiece(0, 8, new ChessPiece.Bishop(PURPLE));
 		SetPiece(13, 5, new ChessPiece.Bishop(CYAN));
 		SetPiece(13, 8, new ChessPiece.Bishop(CYAN));
-		SetPiece(6, 0, new ChessPiece.Queen(BLUE)); // queen
-		SetPiece(7, 0, new ChessPiece.King(BLUE)); // king
+		SetPiece(7, 0, new ChessPiece.Queen(BLUE)); // queen
+		SetPiece(6, 0, new ChessPiece.King(BLUE)); // king
 		SetPiece(6, 13, new ChessPiece.Queen(RED)); // queen
 		SetPiece(7, 13, new ChessPiece.King(RED)); // king
-		SetPiece(0, 6, new ChessPiece.Queen(PURPLE)); // queen
-		SetPiece(0, 7, new ChessPiece.King(PURPLE)); // king
+		SetPiece(0, 7, new ChessPiece.Queen(PURPLE)); // queen
+		SetPiece(0, 6, new ChessPiece.King(PURPLE)); // king
 		SetPiece(13, 6, new ChessPiece.Queen(CYAN)); // queen
 		SetPiece(13, 7, new ChessPiece.King(CYAN)); // king
 
@@ -174,10 +174,10 @@ class fourplayerChessGame implements FPGame {
 	}
 
 	public void setBoard() {
-		System.out.println("   0   1   2   3   4   5   6   7   \t");
+		System.out.println("   0   1   2   3   4   5   6   7   8   9   10  11  12  13   \t");
 		for (int row = 0; row < board.length; row++) {
 			System.out.println("");
-			System.out.println(" ------------------------------------------------------------------");
+			System.out.println(" ---------------------------------------------------------");
 
 			for (int col = 0; col < board[row].length; col++) {
 
@@ -192,8 +192,8 @@ class fourplayerChessGame implements FPGame {
 			System.out.print(" | " + row);
 		}
 		System.out.println("");
-		System.out.println(" ------------------------------------------------------------------");
-		System.out.println("   0   1   2   3   4   5   6   7   \t");
+		System.out.println(" ---------------------------------------------------------");
+		System.out.println("  0   1   2   3   4   5   6   7   8   9   10  11  12  13   \t");
 
 		// MoveIntake();
 		// getMove();
