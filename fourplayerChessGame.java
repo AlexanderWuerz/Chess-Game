@@ -56,12 +56,22 @@ class fourplayerChessGame implements FPGame {
 	ArrayList<ChessPiece> myPieces = new ArrayList<ChessPiece>();
 	public ChessPiece[][] board = new ChessPiece[14][14]; // 14 x 14
 	// public static String[][] board = ChessServer.board;
-	public static boolean turn = false; // Fire Before Smoke, WHITE goes first.
+	//public static boolean turn = false; // Fire Before Smoke, WHITE goes first.
 	public boolean isOver = false;
 
 	int playerNum;
 	String mycolor;
 	
+	public fourplayerChessGame(fourplayerChessGame orig){
+		allPieces = orig.allPieces;
+		myPieces = orig.myPieces;
+		for (int i = 0; i < board.length; i++) {
+			for (int j = 0; j < board.length; j++) {
+				board[i][j] = orig.board[i][j];
+			}
+		}
+				
+	}
 	public fourplayerChessGame(int pNum) {
 		
 		mycolor = pNum==0?"blue":pNum==1?"red":pNum==2?"purple":"cyan";
@@ -266,134 +276,6 @@ class fourplayerChessGame implements FPGame {
 		return theOutput;
 	}
 
-	public String toString() {
-		String b = "\t" + "  0   1   2   3   4   5   6   7   8   9   10  11  12  13   "
-				+ "\t            ---------------------------------           \t" + "            | " + getPiece(3, 0)
-				+ " | " + getPiece(4, 0) + " | " + getPiece(5, 0) + " | " + getPiece(6, 0) + " | " + getPiece(7, 0)
-				+ " | " + getPiece(8, 0) + " | " + getPiece(9, 0) + " | " + getPiece(10, 0) + " |              0"
-				+ "\t            ---------------------------------           \t" + "            | " + getPiece(3, 1)
-				+ " | " + getPiece(4, 1) + " | " + getPiece(5, 1) + " | " + getPiece(6, 1) + " | " + getPiece(7, 1)
-				+ " | " + getPiece(8, 1) + " | " + getPiece(9, 1) + " | " + getPiece(10, 1) + " |              1"
-				+ "\t            ---------------------------------           \t" + "            | " + getPiece(3, 2)
-				+ " | " + getPiece(4, 2) + " | " + getPiece(5, 2) + " | " + getPiece(8, 2) + " | " + getPiece(7, 2)
-				+ " | " + getPiece(6, 2) + " | " + getPiece(9, 2) + " | " + getPiece(10, 2) + " |             2"
-				+ "\t---------------------------------------------------------\t" + "| " + getPiece(0, 3) + " | "
-				+ getPiece(1, 3) + " | " + getPiece(2, 3) + " | " + getPiece(3, 3) + " | " + getPiece(4, 3) + " | "
-				+ getPiece(5, 3) + " | " + getPiece(6, 3) + " | " + getPiece(7, 3) + " | " + getPiece(8, 3) + " | "
-				+ getPiece(9, 3) + " | " + getPiece(10, 3) + " | " + getPiece(11, 3) + " | " + getPiece(12, 3) + " | "
-				+ getPiece(13, 3) + " | 3" + "\t---------------------------------------------------------\t" + "| "
-				+ getPiece(0, 4) + " | " + getPiece(1, 4) + " | " + getPiece(2, 4) + " | " + getPiece(3, 4) + " | "
-				+ getPiece(4, 4) + " | " + getPiece(5, 4) + " | " + getPiece(6, 4) + " | " + getPiece(7, 4) + " | "
-				+ getPiece(8, 4) + " | " + getPiece(9, 4) + " | " + getPiece(10, 4) + " | " + getPiece(11, 4) + " | "
-				+ getPiece(12, 4) + " | " + getPiece(13, 4) + " | 4"
-				+ "\t---------------------------------------------------------\t" + "| " + getPiece(0, 5) + " | "
-				+ getPiece(1, 5) + " | " + getPiece(2, 5) + " | " + getPiece(3, 5) + " | " + getPiece(4, 5) + " | "
-				+ getPiece(5, 5) + " | " + getPiece(6, 5) + " | " + getPiece(7, 5) + " | " + getPiece(8, 5) + " | "
-				+ getPiece(9, 5) + " | " + getPiece(10, 5) + " | " + getPiece(11, 5) + " | " + getPiece(12, 5) + " | "
-				+ getPiece(13, 5) + " | 5" + "\t---------------------------------------------------------\t" + "| "
-				+ getPiece(0, 6) + " | " + getPiece(1, 6) + " | " + getPiece(2, 6) + " | " + getPiece(3, 6) + " | "
-				+ getPiece(4, 6) + " | " + getPiece(5, 6) + " | " + getPiece(6, 6) + " | " + getPiece(7, 6) + " | "
-				+ getPiece(8, 6) + " | " + getPiece(9, 6) + " | " + getPiece(10, 6) + " | " + getPiece(11, 6) + " | "
-				+ getPiece(12, 6) + " | " + getPiece(13, 6) + " | 6"
-				+ "\t---------------------------------------------------------\t" + "| " + getPiece(0, 7) + " | "
-				+ getPiece(1, 7) + " | " + getPiece(2, 7) + " | " + getPiece(3, 7) + " | " + getPiece(4, 7) + " | "
-				+ getPiece(5, 7) + " | " + getPiece(6, 7) + " | " + getPiece(7, 7) + " | " + getPiece(8, 7) + " | "
-				+ getPiece(9, 7) + " | " + getPiece(10, 7) + " | " + getPiece(11, 7) + " | " + getPiece(12, 7) + " | "
-				+ getPiece(13, 7) + " | 7" + "\t---------------------------------------------------------\t" + "| "
-				+ getPiece(0, 8) + " | " + getPiece(1, 8) + " | " + getPiece(2, 8) + " | " + getPiece(3, 8) + " | "
-				+ getPiece(4, 8) + " | " + getPiece(5, 8) + " | " + getPiece(6, 8) + " | " + getPiece(7, 8) + " | "
-				+ getPiece(8, 8) + " | " + getPiece(9, 8) + " | " + getPiece(10, 8) + " | " + getPiece(11, 8) + " | "
-				+ getPiece(12, 8) + " | " + getPiece(13, 8) + " | 8"
-				+ "\t---------------------------------------------------------\t" + "| " + getPiece(0, 9) + " | "
-				+ getPiece(1, 9) + " | " + getPiece(2, 9) + " | " + getPiece(3, 9) + " | " + getPiece(4, 9) + " | "
-				+ getPiece(5, 9) + " | " + getPiece(6, 9) + " | " + getPiece(7, 9) + " | " + getPiece(8, 9) + " | "
-				+ getPiece(9, 9) + " | " + getPiece(10, 9) + " | " + getPiece(11, 9) + " | " + getPiece(12, 9) + " | "
-				+ getPiece(13, 9) + " | 3" + "\t---------------------------------------------------------\t" + "| "
-				+ getPiece(0, 10) + " | " + getPiece(1, 10) + " | " + getPiece(2, 10) + " | " + getPiece(3, 10) + " | "
-				+ getPiece(4, 10) + " | " + getPiece(5, 10) + " | " + getPiece(6, 10) + " | " + getPiece(7, 10) + " | "
-				+ getPiece(8, 10) + " | " + getPiece(9, 10) + " | " + getPiece(10, 10) + " | " + getPiece(11, 10)
-				+ " | " + getPiece(12, 10) + " | " + getPiece(13, 10) + " | 10"
-				+ "\t---------------------------------------------------------\t" + "            | " + getPiece(3, 11)
-				+ " | " + getPiece(4, 11) + " | " + getPiece(5, 11) + " | " + getPiece(6, 11) + " | " + getPiece(7, 11)
-				+ " | " + getPiece(8, 11) + " | " + getPiece(6, 11) + " | " + getPiece(7, 11) + " | 11"
-				+ "\t            ---------------------------------           \t" + "            | " + getPiece(3, 12)
-				+ " | " + getPiece(4, 12) + " | " + getPiece(5, 12) + " | " + getPiece(6, 12) + " | " + getPiece(7, 12)
-				+ " | " + getPiece(8, 12) + " | " + getPiece(9, 12) + " | " + getPiece(10, 12) + " | 12"
-				+ "\t            ---------------------------------           \t" + "            | " + getPiece(3, 13)
-				+ " | " + getPiece(4, 13) + " | " + getPiece(5, 13) + " | " + getPiece(6, 13) + " | " + getPiece(7, 12)
-				+ " | " + getPiece(8, 13) + " | " + getPiece(9, 12) + " | " + getPiece(10, 13) + " | 13"
-				+ "\t            ---------------------------------           \t"
-				+ "  0   1   2   3   4   5   6   7   8   9   10  11  12  13   ";
-		return b;
-
-	}
-
-	public void MoveIntake() {
-
-		Scanner in = new Scanner(System.in);
-		int startX, startY, xmove, ymove;
-		ChessPiece pname;
-		String input; // piece name
-		String[] values;
-		while (turn) {
-			System.out.println("Smoke, select piece to move (x y): ");
-			input = in.nextLine(); // get the entire line.
-			values = input.split(" "); // split on spaces.
-			startX = Integer.parseInt(values[0]);
-			startY = Integer.parseInt(values[1]);
-			pname = getPiece(startX, startY);
-			System.out.println("Where would you like to move? (x y) ");
-			// pname = in.nextLine();
-			input = in.nextLine();
-			values = input.split(" ");
-			xmove = Integer.parseInt(values[0]);
-			ymove = Integer.parseInt(values[1]);
-			// Move humanMove = new Move(xmove,ymove);
-			// validate that the move is legal.
-			if (IsValidMove(startX, startY, xmove, ymove, pname)) {
-				// if(generateValidMoves(startX,startY,pname) != null) {
-
-				RemovePiece(startX, startY);
-				SetPiece(xmove, ymove, pname);
-				turn = false;
-				setBoard();
-			} else {
-				System.out.println("Invalid move, try again!");
-			}
-			// setBoard();
-		}
-		while (!turn) { // FIRE goes first
-
-			System.out.println("Fire, select piece to move (x y): ");
-
-			input = in.nextLine(); // get the entire line.
-			values = input.split(" "); // split on spaces.
-			startX = Integer.parseInt(values[0]);
-			startY = Integer.parseInt(values[1]);
-			// pname = values[2];
-			pname = getPiece(startX, startY);
-			System.out.println("Where would you like to move? (x y)");
-			// pname = in.nextLine();
-			input = in.nextLine();
-			values = input.split(" ");
-			xmove = Integer.parseInt(values[0]);
-			ymove = Integer.parseInt(values[1]);
-
-			// validate that the move is legal.
-			if (IsValidMove(startX, startY, xmove, ymove, pname)) {
-				RemovePiece(startX, startY);
-				SetPiece(xmove, ymove, pname);
-				turn = true;
-				// setBoard();
-			} else {
-				System.out.println("Invalid move, try again!");
-			}
-
-			// setBoard();
-
-		}
-
-	} // end MoveIntake()
 
 	public boolean IsEmptySquare(int x, int y) {
 		// String square = board[x][y];

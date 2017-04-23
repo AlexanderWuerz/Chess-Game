@@ -62,10 +62,11 @@ public abstract class ChessPiece {
 				return false;
 			
 			
-			if (((fx == ix + 1) || (fx == ix - 1)) && fy == iy + 1) {
-				if (!(cg.isMyPiece(fx, fy)) && !(cg.IsEmptySquare(fx,fy)))
-					return true; 
-			}
+//			if (((fx == ix + 1) || (fx == ix - 1)) && fy == iy + 1) {
+//				if (!(cg.isMyPiece(fx, fy)) && !(cg.IsEmptySquare(fx,fy)))
+//					return true; 
+//			}
+			
 			if(moved){
 				switch (direction) {
 				case up:
@@ -85,10 +86,10 @@ public abstract class ChessPiece {
 				case down:
 					return (ix == fx && ((fy == iy - 2)||(fy == iy - 1)));
 				case left:
-					return (iy == fy && ((fx == ix - 2)||(fy == iy - 1)));
+					return (iy == fy && ((fx == ix - 2)||(fx == ix - 1)));
 				}
 	
-				return (iy == fy && ((fx == ix + 2)||(fy == iy +1))); // must be right
+				return (iy == fy && ((fx == ix + 2)||(fx == ix +1))); // must be right
 			}
 			
 		}
@@ -222,13 +223,16 @@ public abstract class ChessPiece {
 			if(Math.abs(ix-fx)>1||Math.abs(iy-fy)>1)
 				return false;
 			
-			if(inCheck(cg, ix, iy, fx, fy))
+			fourplayerChessGame copy = new fourplayerChessGame(cg);
+			copy.sendMove(ix+" "+iy+" "+fx+" "+fy);
+			
+			if(inCheck(copy))
 				return false;
 			
 			return true;
 		}
 
-		public boolean inCheck(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
+		public boolean inCheck(fourplayerChessGame cg) {
 			
 			return false;
 			// tests if THIS king is in check
