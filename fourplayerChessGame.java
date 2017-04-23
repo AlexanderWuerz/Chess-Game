@@ -57,13 +57,10 @@ class fourplayerChessGame implements FPGame {
 	// public static String[][] board = ChessServer.board;
 	public static boolean turn = false; // Fire Before Smoke, WHITE goes first.
 	public boolean isOver = false;
-
-	int playerNum;
-	String mycolor;
 	
+	int playerNum;
+
 	public fourplayerChessGame(int pNum) {
-		
-		mycolor = pNum==0?"blue":pNum==1?"red":pNum==2?"purple":"cyan";
 		playerNum = pNum;
 		// set the pawns
 		for (int i = 3; i < 11; i++) {
@@ -119,23 +116,25 @@ class fourplayerChessGame implements FPGame {
 
 		switch (playerNum) {
 		case 0:
+			break;
+		case 1:
 			for (int i = 3; i < 11; i++) {
 				myPieces.add(getPiece(i, 1));
 				myPieces.add(getPiece(i, 0));
 			}
 			break;
-		case 1:
+		case 2:
 			for (int i = 3; i < 11; i++) {
 				myPieces.add(getPiece(i, 12));
 				myPieces.add(getPiece(i, 13));
 			}
 			break;
-		case 2:
+		case 3:
 			for (int i = 3; i < 11; i++) {
 				myPieces.add(getPiece(0, i));
 				myPieces.add(getPiece(1, i));
 			}
-		case 3:
+		case 4:
 			for (int i = 3; i < 11; i++) {
 				myPieces.add(getPiece(12, i));
 				myPieces.add(getPiece(13, i));
@@ -180,7 +179,7 @@ class fourplayerChessGame implements FPGame {
 		System.out.println("   0   1   2   3   4   5   6   7   \t");
 
 		// MoveIntake();
-		// getMove();
+		//getMove(); 
 
 	} // end setBoard()
 
@@ -389,7 +388,7 @@ class fourplayerChessGame implements FPGame {
 
 	} // end MoveIntake()
 
-	public boolean IsEmptySquare(int x, int y) {
+	public boolean isEmptySquare(int x, int y) {
 		// String square = board[x][y];
 		if (board[x][y] == null)
 			return true;
@@ -397,10 +396,17 @@ class fourplayerChessGame implements FPGame {
 			return false;
 	}
 
+	public boolean isMyPiece(int x, int y) {
+		ChessPiece piece = getPiece(x,y); 
+		if (myPieces.contains(piece)) 
+			return true; 
+		return false; 			
+	}
+
 	public boolean isCapture(Move move) {
 		int x = move.getX();
 		int y = move.getY();
-		if (!IsEmptySquare(x, y))
+		if (!isEmptySquare(x, y))
 			return true;
 		else
 			return false;
@@ -415,8 +421,8 @@ class fourplayerChessGame implements FPGame {
 		ChessPiece pname;
 		String input; // piece name
 		String[] values;
-		System.out.println(mycolor+", Your Turn! ");
-		setBoard();
+		System.out.println("Your Turn! ");
+
 		while (true) {
 			System.out.println("Which Piece do you want to move?");
 			input = sc.nextLine(); // get the entire line.
@@ -440,7 +446,10 @@ class fourplayerChessGame implements FPGame {
 
 			// validate that the move is legal.
 			if (myPieces.contains(p) && IsValidMove(startX, startY, xmove, ymove, p)) {
-				return startX + " " + startY + " " + xmove + " " + ymove;
+				RemovePiece(startX, startY);
+				SetPiece(xmove, ymove, p);
+				turn = true;
+				 setBoard();
 			} else {
 				System.out.println("Invalid move, try again!");
 			}
@@ -450,17 +459,6 @@ class fourplayerChessGame implements FPGame {
 
 	@Override
 	public void sendMove(String s) {
-		String input = s;// get the entire line.
-		String[] values = input.split(" "); // split on spaces.
-		int startX = Integer.parseInt(values[0]);
-		int startY = Integer.parseInt(values[1]);
-		int xmove = Integer.parseInt(values[2]);
-		int ymove = Integer.parseInt(values[3]);
-		
-		
-		ChessPiece p = getPiece(startX, startY);
-		RemovePiece(startX, startY);
-		SetPiece(xmove, ymove, p);
 		// RemovePiece(startX, startY);
 		// SetPiece(xmove, ymove, p);
 		// TODO Auto-generated method stub
@@ -469,7 +467,7 @@ class fourplayerChessGame implements FPGame {
 
 	@Override
 	public boolean isOver() {
-
+		
 		return isOver;
 	}
 
