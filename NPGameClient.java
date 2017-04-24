@@ -34,12 +34,13 @@ import java.io.*;
 import java.net.*;
 import java.util.Scanner;
 
-class ChessClient implements Runnable {
-	public FPGame cg;// = new basicFPGame();
+class NPGameClient implements Runnable {
+	public NPGame cg;// = new basicFPGame();
 	private String hostName;
 	private int portNumber;
 
-	public ChessClient(String host, int port) {
+	public NPGameClient(String host, int port, NPGame g) {
+		cg = g;
 		hostName = host;
 		portNumber = port;
 	}
@@ -52,10 +53,11 @@ class ChessClient implements Runnable {
 			Scanner sc = new Scanner(System.in);
 			String move;
 			int playerNum = Integer.parseInt(in.readLine());
-			cg = new fourplayerChessGame(playerNum);
+			
+			cg = cg.getInstance(playerNum);	//getting new instance with correct player
 
 			while (!cg.isOver()) {
-				for (int i = 0; i < 4; i++) {
+				for (int i = 0; i < cg.n; i++) {
 					if (i == playerNum) {
 
 						System.out.println(playerNum + " getting move.");
@@ -77,7 +79,7 @@ class ChessClient implements Runnable {
 		} catch (IOException e) {
 			System.err.println("Couldn't get I/O for the connection to " + hostName);
 			System.exit(1);
-		}
+		} 
 	}
 
 	public static void main(String[] args) {
@@ -87,7 +89,7 @@ class ChessClient implements Runnable {
 			System.exit(1);
 		}
 
-		(new Thread(new ChessClient(args[0], Integer.parseInt(args[1])))).start();
+		(new Thread(new NPGameClient(args[0], Integer.parseInt(args[1]), new fourplayerChessGame(0)))).start();
 	}
 
 }

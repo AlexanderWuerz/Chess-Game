@@ -10,7 +10,7 @@ import java.lang.*;
 public class fourplayerClientWorker implements Runnable {
 	private Socket client; 
 	//private fourplayerChessGame cp;
-	private basicFPGame cp; 
+	private BasicMPGame cp; 
 
 	
 	public fourplayerClientWorker(Socket client) {

@@ -37,30 +37,28 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class fourplayerChessServer implements Runnable {
+public class NPGameServer implements Runnable {
 
-	// public static String[][] board = new String[8][8];
-	// public static ChessGame cg = new ChessGame();
-	// public static fourplayerChessGame cg = new fourplayerChessGame();
-
-	// public static ChessPiece[][] board = cg.board;
-	private basicFPGame cp;
 
 	int portNumber;
 
-	public fourplayerChessServer(int port) {
+	NPGame cg;
+	
+	public NPGameServer(int port, NPGame g) {
+		cg = g;
 		portNumber = port;
 	}
 
 	public void run() {
 		
-		FPGame cg = new fourplayerChessGame(0);
+		
 		try  {
 			ServerSocket serverSocket = new ServerSocket(portNumber);
-			fpClientInterface[] cis = new fpClientInterface[4];
+			fpClientInterface[] cis = new fpClientInterface[cg.n];
 			for(int i=0; i<cis.length; i++){
 				cis[i] = new fpClientInterface(serverSocket);
 				cis[i].out.println(i);
+				System.out.println("Accepted Client"+ i);
 			}
 			
 			//main game loop
@@ -68,14 +66,14 @@ public class fourplayerChessServer implements Runnable {
 			Thread.sleep(1000);
 			
 			while(!cg.isOver()){
-				for(int i=0; i<4;i++){
+				for(int i=0; i<cg.n;i++){
 					System.out.println("getting move from player "+i);
 					String move = cis[i].in.readLine();
 					System.out.println("got move from player "+i);
 					cg.sendMove(move);
 					Thread.sleep(100);
 					
-					for(int j=0;j<4;j++){
+					for(int j=0;j<cg.n;j++){
 						System.out.println("sending move to player "+j);
 						cis[j].out.println(move);
 						Thread.sleep(100);
@@ -94,26 +92,13 @@ public class fourplayerChessServer implements Runnable {
 		}
 	}
 
-	/*
-	 * fourplayerClientWorker w1; fourplayerClientWorker w2;
-	 * fourplayerClientWorker w3; fourplayerClientWorker w4; try { //
-	 * server.accept() returns a client connection w1 = new
-	 * fourplayerClientWorker(serverSocket.accept()); w2 = new
-	 * fourplayerClientWorker(serverSocket.accept()); w3 = new
-	 * fourplayerClientWorker(serverSocket.accept()); w4 = new
-	 * fourplayerClientWorker(serverSocket.accept()); Thread t1 = new
-	 * Thread(w1); Thread t2 = new Thread(w2); Thread t3 = new Thread(w3);
-	 * Thread t4 = new Thread(w4);
-	 * 
-	 * t1.start(); t2.start(); t3.start(); t4.start();
-	 */
 	public static void main(String[] args) throws IOException {
 
 		if (args.length != 1) {
 			System.err.println("Usage: java ChessServer <port number>");
 			System.exit(1);
 		}
-		(new Thread(new fourplayerChessServer(Integer.parseInt(args[0])))).start();
+		(new Thread(new NPGameServer(Integer.parseInt(args[0]), new fourplayerChessGame(0)))).start();
 	}
 
 	private static class fpClientInterface {

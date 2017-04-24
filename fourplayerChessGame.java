@@ -35,7 +35,7 @@ import java.io.*;
 import java.util.regex.*;
 import java.util.*;
 
-class fourplayerChessGame implements FPGame {
+class fourplayerChessGame extends NPGame {
 	private static final int WAITING = 0;
 	private static final int SENTBOARD = 1;
 	public static int state = WAITING;
@@ -56,15 +56,18 @@ class fourplayerChessGame implements FPGame {
 	ArrayList<ChessPiece> myPieces = new ArrayList<ChessPiece>();
 	public ChessPiece[][] board = new ChessPiece[14][14]; // 14 x 14
 	// public static String[][] board = ChessServer.board;
-	//public static boolean turn = false; // Fire Before Smoke, WHITE goes first.
+	// public static boolean turn = false; // Fire Before Smoke, WHITE goes
+	// first.
+	
 	public boolean isOver = false;
 	public boolean iLose = false;
 	public ChessPiece.King myKing;
-	
-	int playerNum;
+
 	String mycolor;
-	
-	public fourplayerChessGame(fourplayerChessGame orig){
+
+	public fourplayerChessGame(fourplayerChessGame orig) {
+		super(orig.playerNum);
+		n=4;
 		allPieces = orig.allPieces;
 		myPieces = orig.myPieces;
 		for (int i = 0; i < board.length; i++) {
@@ -72,16 +75,17 @@ class fourplayerChessGame implements FPGame {
 				board[i][j] = orig.board[i][j];
 			}
 		}
-		playerNum = orig.playerNum;
 		mycolor = orig.mycolor;
-		
+
 		myKing = orig.myKing;
-				
+
 	}
+
 	public fourplayerChessGame(int pNum) {
+		super(pNum);
+		n=4;
+		mycolor = pNum == 0 ? "blue" : pNum == 1 ? "red" : pNum == 2 ? "purple" : "cyan";
 		
-		mycolor = pNum==0?"blue":pNum==1?"red":pNum==2?"purple":"cyan";
-		playerNum = pNum;
 		// set the pawns
 		for (int i = 3; i < 11; i++) {
 			SetPiece(i, 1, new ChessPiece.Pawn(BLUE, 'u'));
@@ -158,13 +162,14 @@ class fourplayerChessGame implements FPGame {
 				myPieces.add(getPiece(13, i));
 			}
 		}
-		
-		
-		
-		for(ChessPiece[] r:board)
-			for(ChessPiece p:r)
-				if(p!=null && !(p instanceof ChessPiece.blocked))
+
+		for (ChessPiece[] r : board)
+			for (ChessPiece p : r) {
+				if (p != null && !(p instanceof ChessPiece.blocked))
 					allPieces.add(p);
+				if (myPieces.contains(p) && p instanceof ChessPiece.King)
+					myKing = (ChessPiece.King) p;
+			}
 
 	}
 
@@ -209,8 +214,7 @@ class fourplayerChessGame implements FPGame {
 	} // end setBoard()
 
 	public boolean IsValidMove(int ix, int iy, int fx, int fy, ChessPiece pname) {
-
-		return pname.legalMove(this, ix, iy, fx, fy);
+		return pname.legalMove(this, ix, iy, fx, fy, true);
 	} // end IsValidMove()
 
 	public boolean IsEmptySquare(int x, int y) {
@@ -220,14 +224,14 @@ class fourplayerChessGame implements FPGame {
 		else
 			return false;
 	}
-	
+
 	public boolean isMyPiece(int x, int y) {
-		ChessPiece piece = getPiece(x,y); 
-		if (myPieces.contains(piece)) 
-			return true; 
-		return false; 			
+		ChessPiece piece = getPiece(x, y);
+		if (myPieces.contains(piece))
+			return true;
+		return false;
 	}
-	
+
 	public boolean isCapture(Move move) {
 		int x = move.getX();
 		int y = move.getY();
@@ -242,19 +246,22 @@ class fourplayerChessGame implements FPGame {
 	@Override
 	public String getMove() {
 
-		if(iLose)
+		if (iLose)
 			return "out";
-		
-		if(myKing.inCheck(this)&&myKing.isCheckMate(this))
-		{
-			iLose = true;
+		if (myKing.inCheck(this)) {
+			System.out.println("You are in check!");
+			if (myKing.isCheckMate(this)) {
+				System.out.println("You Lose!");
+				iLose = true;
+				return "out";
+			}
 		}
-		
+
 		int startX, startY, xmove, ymove;
 		ChessPiece pname;
 		String input; // piece name
 		String[] values;
-		System.out.println(mycolor+", Your Turn! ");
+		System.out.println(mycolor + ", Your Turn! ");
 		setBoard();
 		while (true) {
 			System.out.println("Which Piece do you want to move?");
@@ -289,7 +296,7 @@ class fourplayerChessGame implements FPGame {
 
 	@Override
 	public void sendMove(String s) {
-		if(s.equals("out"))
+		if (s.equals("out"))
 			return;
 		String input = s;// get the entire line.
 		String[] values = input.split(" "); // split on spaces.
@@ -297,8 +304,7 @@ class fourplayerChessGame implements FPGame {
 		int startY = Integer.parseInt(values[1]);
 		int xmove = Integer.parseInt(values[2]);
 		int ymove = Integer.parseInt(values[3]);
-		
-		
+
 		ChessPiece p = getPiece(startX, startY);
 		RemovePiece(startX, startY);
 		SetPiece(xmove, ymove, p);
@@ -312,6 +318,10 @@ class fourplayerChessGame implements FPGame {
 	public boolean isOver() {
 
 		return isOver;
+	}
+
+	public NPGame getInstance(int newPlayerNum) {
+		return new fourplayerChessGame(newPlayerNum);
 	}
 
 }

@@ -1,11 +1,13 @@
 import java.util.Scanner;
 
-public class basicFPGame implements FPGame {
+public class BasicMPGame extends NPGame {
 
 	int playerNum;
 	int score;
 	
-	public basicFPGame(int pn){
+	public BasicMPGame(int pn, int nPlayers){
+		super(pn);
+		n = nPlayers;
 		System.out.println("Player "+pn+" created");
 		playerNum = pn;
 		score=0;
@@ -31,6 +33,12 @@ public class basicFPGame implements FPGame {
 	@Override
 	public boolean isOver() {
 		return score>100;
+	}
+
+
+	@Override
+	public NPGame getInstance(int newPlayerNum) {
+		return new BasicMPGame(newPlayerNum, n);
 	}
 
 }

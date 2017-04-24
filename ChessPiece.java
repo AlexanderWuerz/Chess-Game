@@ -7,21 +7,22 @@ public abstract class ChessPiece {
 	String color;
 	String pieceType;
 
-	protected boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
+	protected boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy, boolean considerCheck) {
 		if (fx == ix && fy == iy)
 			return false; // cannot move nothing
 		if (fx < 0 || fx > 13 || ix < 0 || ix > 13 || fy < 0 || fy > 13 || iy < 0 || iy > 13)
 			return false; // cannot move off board
 
-		fourplayerChessGame copy = new fourplayerChessGame(cg);
-		copy.sendMove(ix + " " + iy + " " + fx + " " + fy);
+		if (considerCheck) {
+			fourplayerChessGame copy = new fourplayerChessGame(cg);
+			copy.sendMove(ix + " " + iy + " " + fx + " " + fy);
 
-		King myKing = cg.myKing;
-		if (myKing.inCheck(copy))
-			return false; // cannot move into check
+			King myKing = cg.myKing;
+			if (myKing.inCheck(copy))
+				return false; // cannot move into check
 
-		// must still check for occupied space
-
+			// must still check for occupied space
+		}
 		return true;
 	}
 
@@ -40,14 +41,6 @@ public abstract class ChessPiece {
 			}
 		}
 		return null; // if THIS is not on the board
-	}
-
-	public void move(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
-		if (legalMove(cg, ix, iy, fx, fy)) {
-
-			// edit position in cg
-
-		}
 	}
 
 	public String toString() {
@@ -73,11 +66,11 @@ public abstract class ChessPiece {
 		}
 
 		@Override
-		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
+		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy, boolean considerCheck) {
 
 			// must still consider the pawn's capture move
 
-			if (!super.legalMove(cg, ix, iy, fx, fy))
+			if (!super.legalMove(cg, ix, iy, fx, fy, considerCheck))
 				return false;
 
 			// if (((fx == ix + 1) || (fx == ix - 1)) && fy == iy + 1) {
@@ -128,10 +121,11 @@ public abstract class ChessPiece {
 
 		}
 
-		public void move(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
-			moved = true;
-			super.move(cg, ix, iy, fx, fy);
-		}
+		// public void move(fourplayerChessGame cg, int ix, int iy, int fx, int
+		// fy) {
+		// moved = true;
+		// super.move(cg, ix, iy, fx, fy);
+		// }
 	}
 
 	public static class Knight extends ChessPiece {
@@ -143,9 +137,9 @@ public abstract class ChessPiece {
 		}
 
 		@Override
-		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
+		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy, boolean considerCheck) {
 
-			if (!super.legalMove(cg, ix, iy, fx, fy))
+			if (!super.legalMove(cg, ix, iy, fx, fy, considerCheck))
 				return false;
 
 			if (!(((fx == ix - 2) || (fx == ix + 2)) && ((fy == iy - 1) || (fy == iy + 1)))
@@ -167,8 +161,8 @@ public abstract class ChessPiece {
 		}
 
 		@Override
-		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
-			if (!super.legalMove(cg, ix, iy, fx, fy))
+		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy, boolean considerCheck) {
+			if (!super.legalMove(cg, ix, iy, fx, fy, considerCheck))
 				return false;
 			if ((Math.abs(ix - fx) == Math.abs(iy - fy)) && !(cg.isMyPiece(fx, fy)))
 				return true;
@@ -186,8 +180,10 @@ public abstract class ChessPiece {
 		}
 
 		@Override
-		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
+		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy, boolean considerCheck) {
 			// will take direction into account
+			if (!super.legalMove(cg, ix, iy, fx, fy, considerCheck))
+				return false;
 			if ((Math.abs(fx - ix) == Math.abs(fy - iy))) // diagonal move
 				return false;
 			return true;
@@ -205,41 +201,43 @@ public abstract class ChessPiece {
 		}
 
 		@Override
-		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
+		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy, boolean considerCheck) {
 			// will take direction into account
-			if (!super.legalMove(cg, ix, iy, fx, fy))
+			if (!super.legalMove(cg, ix, iy, fx, fy, considerCheck))
 				return false;
 
-			/*
-			 * if ((Math.abs(ix - fx) == Math.abs(iy -
-			 * fy))&&!(cg.isMyPiece(fx,fy))) // diagonal move return true;
-			 */
+			
 			if (iy == fy) { // horizontal move
 				if (ix < fx) { // move right
 					for (k = ix + 1; k <= fx; ++k) {
-						if (cg.getPiece(k, iy) != null && !(cg.isMyPiece(k, iy)))
-							return true;
+						if (cg.getPiece(k, iy) != null)
+							return false;
 					}
 				} else if (ix > fx) { // move left
 					for (k = ix - 1; k >= fx; --k) {
-						if (cg.getPiece(k, iy) != null && !(cg.isMyPiece(k, iy)))
-							return true;
+						if (cg.getPiece(k, iy) != null)
+							return false;
 					}
 				}
 			} else if (ix == fx) { // vertical move
 				if (iy < fy) { // move down
 					for (k = iy + 1; k <= fy; ++k) {
-						if (cg.getPiece(ix, k) != null && !(cg.isMyPiece(ix, k)))
-							return true;
+						if (cg.getPiece(ix, k) != null)
+							return false;
 					}
 				} else if (iy > fy) { // move up
 					for (k = iy - 1; k >= fy; --k) {
-						if (cg.getPiece(ix, k) != null && !(cg.isMyPiece(ix, k)))
-							return true;
+						if (cg.getPiece(ix, k) != null)
+							return false;
 					}
 				}
+			} else{
+				
+				if (!(Math.abs(ix - fx) == Math.abs(iy - fy))) 
+						  return false; // diagonal move return true;
+				 
 			}
-			return false;
+			return true;
 		}
 
 	}
@@ -253,8 +251,8 @@ public abstract class ChessPiece {
 		}
 
 		@Override
-		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
-			if (!super.legalMove(cg, ix, iy, fx, fy))
+		public boolean legalMove(fourplayerChessGame cg, int ix, int iy, int fx, int fy, boolean considerCheck) {
+			if (!super.legalMove(cg, ix, iy, fx, fy, considerCheck))
 				return false;
 
 			if (Math.abs(ix - fx) > 1 || Math.abs(iy - fy) > 1)
@@ -270,9 +268,11 @@ public abstract class ChessPiece {
 			ChessPiece[][] board = cg.board;
 			for (int i = 0; i < 14; i++) {
 				for (int j = 0; j < 14; j++) {
-					if (!cg.isMyPiece(i, j)
-							&& board[i][j].legalMove(cg, i, j, kingCoords.getKey(), kingCoords.getValue()))
-						return true;
+					if (board[i][j] != null && !(board[i][j] instanceof blocked)) {
+						if (!cg.isMyPiece(i, j)
+								&& board[i][j].legalMove(cg, i, j, kingCoords.getKey(), kingCoords.getValue(), false))
+							return true;
+					}
 				}
 			}
 
@@ -287,10 +287,10 @@ public abstract class ChessPiece {
 
 			for (int i = 0; i < 14; i++)
 				for (int j = 0; j < 14; j++)
-					if (cg.isMyPiece(i, j))	//checks every friendly piece
+					if (cg.isMyPiece(i, j)) // checks every friendly piece
 						for (int k = 0; k < 14; k++)
 							for (int m = 0; m < 14; m++)
-								if (legalMove(cg, i, j, k, m))
+								if (k != kx && m != ky && legalMove(cg, i, j, k, m, true))
 									return false;
 
 			return true;
@@ -313,6 +313,11 @@ public abstract class ChessPiece {
 			return false;
 
 		}
+
+	}
+
+	public void move(fourplayerChessGame cg, int ix, int iy, int fx, int fy) {
+		// TODO Auto-generated method stub
 
 	}
 
