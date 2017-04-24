@@ -55,6 +55,8 @@ class NPGameClient implements Runnable {
 			int playerNum = Integer.parseInt(in.readLine());
 			
 			cg = cg.getInstance(playerNum);	//getting new instance with correct player
+			
+			cg.displayGame();
 
 			while (!cg.isOver()) {
 				for (int i = 0; i < cg.n; i++) {
