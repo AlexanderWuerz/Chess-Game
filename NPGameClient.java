@@ -68,6 +68,7 @@ class NPGameClient implements Runnable {
 					System.out.println(playerNum + " waiting on server");
 					move = in.readLine();
 					cg.sendMove(move);
+					cg.displayGame();
 					System.out.println(playerNum + " got move.");
 
 				}

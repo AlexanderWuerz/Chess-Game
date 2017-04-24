@@ -26,7 +26,7 @@ public class BasicMPGame extends NPGame {
 	public void sendMove(String s) {
 
 		score+=Integer.parseInt(s);
-		System.out.println(playerNum+" "+score);
+		
 
 	}
 
@@ -39,6 +39,13 @@ public class BasicMPGame extends NPGame {
 	@Override
 	public NPGame getInstance(int newPlayerNum) {
 		return new BasicMPGame(newPlayerNum, n);
+	}
+
+
+	@Override
+	public void displayGame() {
+		System.out.println("Player "+playerNum+", "+score);
+		
 	}
 
 }

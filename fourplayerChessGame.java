@@ -186,7 +186,7 @@ class fourplayerChessGame extends NPGame {
 		board[x][y] = null;
 	}
 
-	public void setBoard() {
+	public void displayGame() {
 		System.out.println("   0   1   2   3   4   5   6   7   8   9   10  11  12  13   \t");
 		for (int row = 0; row < board.length; row++) {
 			System.out.println("");
@@ -206,7 +206,7 @@ class fourplayerChessGame extends NPGame {
 		}
 		System.out.println("");
 		System.out.println(" ---------------------------------------------------------");
-		System.out.println("  0   1   2   3   4   5   6   7   8   9   10  11  12  13   \t");
+		System.out.println("   0   1   2   3   4   5   6   7   8   9   10  11  12  13   \t");
 
 		// MoveIntake();
 		// getMove();
@@ -262,7 +262,7 @@ class fourplayerChessGame extends NPGame {
 		String input; // piece name
 		String[] values;
 		System.out.println(mycolor + ", Your Turn! ");
-		setBoard();
+		
 		while (true) {
 			System.out.println("Which Piece do you want to move?");
 			input = sc.nextLine(); // get the entire line.

@@ -12,5 +12,6 @@ public abstract class NPGame {
 	public abstract boolean isOver();				
 	public abstract String getMove();
 	public abstract void sendMove(String s);
+	public abstract void displayGame();
 	
 }
